@@ -261,6 +261,10 @@ public final class PCFFont: Font {
         let enc1 = encoding >> 8
         let enc2 = encoding & 0xFF
 
+        if enc1 < encodingTableHead.minByte1 || enc2 < encodingTableHead.minByte2 {
+            return 0xFFFF
+        }
+
         let index = (enc1 - encodingTableHead.minByte1) *
                     (encodingTableHead.maxByte2 - encodingTableHead.minByte2 + 1) +
                     enc2 - encodingTableHead.minByte2
