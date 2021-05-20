@@ -9,13 +9,13 @@ public final class MadDisplay {
     let screenArea: Area
 
     //public init(screen: BitmapWritable, bitCount: Int) {
-    public init(screen: BitmapWritable) {
+    public init(screen: BitmapWritable, colorSpace: ColorSpace) {
         self.screen = screen
 
         //colorSpace = ColorSpace(depth: UInt8(bitCount))
         //colorSpace = ColorSpace()
 
-        colorSpace = screen.colorSpace
+        self.colorSpace = colorSpace
         transform = Transform()
         pixelsPerWord = 32 / Int(colorSpace.depth)
         screenArea = Area(x1: 0, y1: 0, x2: screen.width - 1, y2: screen.height - 1)
