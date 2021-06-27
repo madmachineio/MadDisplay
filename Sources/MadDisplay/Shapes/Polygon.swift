@@ -1,4 +1,4 @@
-public class Polygon: TileGrid {
+public class Polygon: Tile {
     public typealias Point = (x: Int, y: Int)
 
     public init(_ points: [Point], outline: UInt32? = nil) {
@@ -21,7 +21,7 @@ public class Polygon: TileGrid {
 
         let _bitmap = Bitmap(width: width, height: height, bitCount: 4)
 
-        super.init(bitmap: _bitmap, palette: _palette, x: xOffset, y: yOffset)
+        super.init(x: xOffset, y: yOffset, bitmap: _bitmap, palette: _palette)
 
         if let outline = outline {
             palette[1] = outline

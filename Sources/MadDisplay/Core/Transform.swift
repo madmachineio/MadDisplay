@@ -9,4 +9,8 @@ public struct Transform {
     var mirrorX: Bool = false
     var mirrorY: Bool = false
     var transposeXY: Bool = false
+
+    public init() {
+
+    }
 }

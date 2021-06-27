@@ -56,7 +56,7 @@ extension Group {
         }
 
         for child in children {
-            if let t = child as? TileGrid {
+            if let t = child as? Tile {
                 t.setHiddenByParent(value)
             } else if let g = child as? Group {
                 g.setHiddenByParent(value)
@@ -81,7 +81,7 @@ extension Group {
         }
 
         for child in children {
-            if let t = child as? TileGrid {
+            if let t = child as? Tile {
                 t.setHiddenByParent(value)
             } else if let g = child as? Group {
                 g.setHiddenByParent(value)
@@ -100,7 +100,7 @@ extension Group {
         for child in children {
             var layerArea: Area? = nil
 
-            if let t = child as? TileGrid {
+            if let t = child as? Tile {
                 layerArea = t.getPreviousArea()
             } else if let g = child as? Group {
                 layerArea = g.getPreviousArea()
@@ -114,7 +114,7 @@ extension Group {
                 area = layerArea
                 first = false
             } else {
-                area!.formUnion(layerArea!)
+                area = area!.union(layerArea!)
             }
         }
 
@@ -123,7 +123,7 @@ extension Group {
                 area = dirtyArea
                 first = false
             } else {
-                area!.formUnion(dirtyArea)
+                area = area!.union(dirtyArea)
             }
         }
 
@@ -136,7 +136,7 @@ extension Group {
         }
 
         for child in children {
-            if let t = child as? TileGrid {
+            if let t = child as? Tile {
                 t.updateTransform(absoluteTransform)
             } else if let g = child as? Group {
                 g.updateTransform(absoluteTransform)
@@ -230,9 +230,9 @@ extension Group {
         updateChildTransforms()
     }
 
-    private func addLayer(_ layer: TileGrid) {
+    private func addLayer(_ layer: Tile) {
         if layer.options.contains(.inGroup) {
-            fatalError("tileGrid already in a group.")
+            fatalError("tile already in a group.")
         } else {
             layer.options.insert(.inGroup)
         }
@@ -248,9 +248,9 @@ extension Group {
         layer.updateTransform(absoluteTransform)
     }
 
-    public func append(_ tileGrid: TileGrid) {
-        addLayer(tileGrid)
-        children.append(tileGrid)
+    public func append(_ tile: Tile) {
+        addLayer(tile)
+        children.append(tile)
     }
 
     public func append(_ group: Group) {
@@ -258,12 +258,12 @@ extension Group {
         children.append(group)
     }
 
-    public func insert(_ tileGrid: TileGrid, at index: Int) {
+    public func insert(_ tile: Tile, at index: Int) {
         if index >= size {
             fatalError("Insert position must before the end of all children")
         }
-        addLayer(tileGrid)
-        children.insert(tileGrid, at: index)
+        addLayer(tile)
+        children.insert(tile, at: index)
     }
 
     public func insert(_ group: Group, at index: Int) {
@@ -279,7 +279,7 @@ extension Group {
         var layerArea: Area? = nil
         let layer = children[index]
 
-            if let t = layer as? TileGrid {
+            if let t = layer as? Tile {
                 layerArea = t.getPreviousArea()
                 t.updateTransform(nil)
             } else if let g = layer as? Group {
@@ -294,7 +294,7 @@ extension Group {
         if !options.contains(.itemRemoved) {
             dirtyArea = layerArea!
         } else {
-            dirtyArea.formUnion(layerArea!)
+            dirtyArea = dirtyArea.union(layerArea!)
         }
 
         options.insert(.itemRemoved)
@@ -306,7 +306,7 @@ extension Group {
         return children.remove(at: index)
     }
 
-    public func remove(_ t: TileGrid) -> Bool {
+    public func remove(_ t: Tile) -> Bool {
         if let index = children.firstIndex(where: {item in item === t}) {
             _ = remove(at: index)
             return true
@@ -335,10 +335,10 @@ extension Group {
         return size
     }
 
-    public func replace(with tileGrid: TileGrid, at index: Int) {
-        addLayer(tileGrid)
+    public func replace(with tile: Tile, at index: Int) {
+        addLayer(tile)
         removeLayer(at: index)
-        children[index] = tileGrid
+        children[index] = tile
     }
 
     public func replace(with group: Group, at index: Int) {
@@ -347,12 +347,12 @@ extension Group {
         children[index] = group
     }
 
-    func fillArea(colorSpace: ColorSpace, area: Area, mask: inout [UInt32], data: inout [UInt32]) -> Bool {
+    func fillArea(colorSpace: ColorSpace, area: Area, mask: inout [UInt32], data: inout [UInt8]) -> Bool {
         var fullCoverage = false
         for index in (0..<size).reversed() {
             let layer = children[index]
 
-            if let t = layer as? TileGrid {
+            if let t = layer as? Tile {
                 fullCoverage = t.fillArea(colorSpace: colorSpace, area: area, mask: &mask, data: &data)
                 if fullCoverage {
                     break
@@ -374,7 +374,7 @@ extension Group {
         for index in (0..<size).reversed() {
             let layer = children[index]
 
-            if let t = layer as? TileGrid {
+            if let t = layer as? Tile {
                 t.finishRefresh()
             } else if let g = layer as? Group {
                 g.finishRefresh()
@@ -382,27 +382,20 @@ extension Group {
         }
     }
 
-    func getRefreshAreas(_ tail: Area?) -> Area? {
-        var tail = tail
+    func getRefreshAreas(_ areas: inout [Area]) {
 
         if options.contains(.itemRemoved) {
-            dirtyArea.next = tail
-            tail = dirtyArea
+            areas.append(dirtyArea)
         }
 
         for index in (0..<size).reversed() {
             let layer = children[index]
-            //print("index = \(index)")
-            //print("tail = \(tail)")
 
-            if let t = layer as? TileGrid {
-                tail = t.getRefreshAreas(tail)
+            if let t = layer as? Tile {
+                t.getRefreshAreas(&areas)
             } else if let g = layer as? Group {
-                tail = g.getRefreshAreas(tail)
+                g.getRefreshAreas(&areas)
             }
         }
-
-        return tail
     }
-
 }

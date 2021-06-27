@@ -1,4 +1,4 @@
-public final class Rect: TileGrid {
+public final class Rect: Tile {
     public init(x: Int, y: Int, width: Int, height: Int, fill: UInt32! = nil, outline: UInt32! = nil, stroke: Int = 1) {
         let bitmap = Bitmap(width: width, height: height, bitCount: 2)
         let palette = Palette(count: 2)
@@ -30,7 +30,7 @@ public final class Rect: TileGrid {
             palette.makeTransparent(0)
         }
 
-        super.init(bitmap: bitmap, palette: palette, x: x, y: y)
+        super.init(x: x, y: y, bitmap: bitmap, palette: palette)
     }
 
     public func setOutline(color: UInt32!) {

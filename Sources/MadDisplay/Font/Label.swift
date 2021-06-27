@@ -11,7 +11,7 @@ public final class Label: Group {
     var backgroundTight: Bool = false
     var color: UInt32
     var backgroundColor: UInt32? = nil
-    var addedBackgroundTilegrid = false
+    var addedBackgroundTile = false
     
     var scaleValue: Int
 
@@ -22,8 +22,8 @@ public final class Label: Group {
     let palette = Palette(count: 2)
     let backgroundPalette = Palette(count: 1)
 
-    var anchorPoint: Point?
-    var anchorPosition: Point?
+    //var anchorPoint: Point?
+    //var anchorPosition: Point?
     var boundingBox: (Int, Int, Int, Int) = (0, 0, 0, 0)
 
 
@@ -54,7 +54,7 @@ public final class Label: Group {
         }
     }
 
-    func creatBackgroundBox(lines: Int, yOffset: Int) -> TileGrid {
+    func creatBackgroundBox(lines: Int, yOffset: Int) -> Tile {
         let left = boundingBox.0
         
         var boxWidth = 0
@@ -81,12 +81,12 @@ public final class Label: Group {
         boxHeight = max(0, boxHeight)
 
         let backgroundBitmap = Bitmap(width: boxWidth, height: height, bitCount: 1)
-        let backTilegrid = TileGrid(bitmap: backgroundBitmap,
-                                    palette: backgroundPalette,
-                                    x: left + xBoxOffset,
-                                    y: yBoxOffset)
+        let backTile = Tile(x: left + xBoxOffset,
+                                    y: yBoxOffset,
+                                    bitmap: backgroundBitmap,
+                                    palette: backgroundPalette)
         
-        return backTilegrid
+        return backTile
     }
 
     public func updateBackgroundColor(_ newColor: UInt32? = nil) {
@@ -96,9 +96,9 @@ public final class Label: Group {
             backgroundColor = opaqueColor
         } else {
             backgroundPalette.makeTransparent(0)
-            if addedBackgroundTilegrid {
+            if addedBackgroundTile {
                 localGroup.remove(at: 0)
-                addedBackgroundTilegrid = false
+                addedBackgroundTile = false
             }
         }
 
@@ -107,14 +107,14 @@ public final class Label: Group {
         if let text = text {
             let lines = text.filter {$0 == "\n"}.count
 
-            if addedBackgroundTilegrid {
+            if addedBackgroundTile {
                 if text.count > 0 &&
                     boundingBox.2 + paddingLeft + paddingRight > 0 &&
                     boundingBox.3 + paddingTop + paddingBottom > 0 {
                         localGroup.insert(creatBackgroundBox(lines: lines, yOffset: yOffset), at: 0)
                 } else {
                     localGroup.remove(at: 0)
-                    addedBackgroundTilegrid = false
+                    addedBackgroundTile = false
                 }
             } else {
                 if text.count > 0 &&
@@ -125,7 +125,7 @@ public final class Label: Group {
                         } else {
                             localGroup.append(creatBackgroundBox(lines: lines, yOffset: yOffset))
                         }
-                        addedBackgroundTilegrid = true
+                        addedBackgroundTile = true
                 }
             }
         }
@@ -134,10 +134,10 @@ public final class Label: Group {
     public func updateText(_ newText: String) {
         var x = 0, y = 0, i = 0
 
-        if addedBackgroundTilegrid {
+        if addedBackgroundTile {
             i = 1
         }
-        var tileGridCount = i
+        var tileCount = i
 
         let yOffset = height / 2
 
@@ -168,16 +168,16 @@ public final class Label: Group {
             let positionX = x + glyph.dx
 
             if glyph.width > 0 && glyph.height > 0 {
-                let face = TileGrid(bitmap: glyph.bitmap!,
-                                    palette: palette,
-                                    x: positionX,
-                                    y: positionY)
-                if tileGridCount < localGroup.size {
-                    localGroup.insert(face, at: tileGridCount)
+                let face = Tile(    x: positionX,
+                                    y: positionY,
+                                    bitmap: glyph.bitmap!,
+                                    palette: palette)
+                if tileCount < localGroup.size {
+                    localGroup.insert(face, at: tileCount)
                 } else {
                     localGroup.append(face)
                 }
-                tileGridCount += 1               
+                tileCount += 1               
             }
 
             x += glyph.shiftX
@@ -188,7 +188,7 @@ public final class Label: Group {
             left = 0
         }
 
-        while localGroup.size > tileGridCount {
+        while localGroup.size > tileCount {
             localGroup.pop()
         }
 

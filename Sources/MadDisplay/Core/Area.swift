@@ -1,45 +1,20 @@
 struct Area {
 
-    enum Recurse {
-        indirect case next(Area)
-        
-        var data: Area {
-            switch self {
-            case .next(let data): return data
-            }
-        }
+    var x1: Int
+    var y1: Int
+    var x2: Int
+    var y2: Int
+
+    init () {
+        x1 = -1
+        y1 = -1
+        x2 = -1
+        y2 = -1
     }
 
-    var x1: Coord = 0
-    var y1: Coord = 0
-    var x2: Coord = 0
-    var y2: Coord = 0
-
-    var box: Recurse? = nil
-
-    var next: Area? {
-        get {
-            box?.data ?? nil
-        }
-        set {
-            if let someValue = newValue {
-                box = Recurse.next(someValue)
-            } else {
-                box = nil
-            }
-        }
-    }
-
-    init() {
-        x1 = 0
-        y1 = 0
-        x2 = 0
-        y2 = 0
-    }
-
-    init(x1: Coord, y1: Coord, x2: Coord, y2: Coord) {
+    init(x1: Int, y1: Int, x2: Int, y2: Int) {
         guard x2 >= x1 && y2 >= y1 else {
-            fatalError("x2/y2 must >= x1/y1")
+            fatalError("x2, y2 must >= x1, y1")
         }
 
         self.x1 = x1
@@ -48,15 +23,15 @@ struct Area {
         self.y2 = y2
     }
 
-    init(x1: Coord, y1: Coord, width: Coord, height: Coord) {
+    init(x1: Int, y1: Int, width: Int, height: Int) {
         guard width > 0 && height > 0 else {
             fatalError("width and height must > 1")
         }
 
         self.x1 = x1
         self.y1 = y1
-        x2 = x1 + width - 1
-        y2 = y1 + height - 1
+        self.x2 = x1 + width - 1
+        self.y2 = y1 + height - 1
     }
 }
 
@@ -81,11 +56,11 @@ extension Area: Equatable {
 extension Area {
 
     var width: Int {
-        Int(x2 - x1 + 1)
+        x2 - x1 + 1
     }
 
     var height: Int {
-        Int(y2 - y1 + 1)
+        y2 - y1 + 1
     }
 
     var size: Int {
@@ -170,28 +145,14 @@ extension Area {
 
 extension Area {
 
-    mutating func reSize(_ b: Area) {
-        x1 = b.x1
-        y1 = b.y1
-        x2 = b.x2
-        y2 = b.y2
-    }
-
-    mutating func formUnion(_ b: Area) {
-        x1 = x1 < b.x1 ? x1 : b.x1
-        y1 = y1 < b.y1 ? y1 : b.y1
-        x2 = x2 > b.x2 ? x2 : b.x2
-        y2 = y2 > b.y2 ? y2 : b.y2
-    }
-
-    mutating func shift(dx: Coord, dy: Coord) {
+    mutating func shift(dx: Int, dy: Int) {
         x1 += dx
         x2 += dx
         y1 += dy
         y2 += dy
     }
 
-    mutating func moveTo(x: Coord, y: Coord) {
+    mutating func moveTo(x: Int, y: Int) {
         let w = width
         let h = height
 

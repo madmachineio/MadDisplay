@@ -1,9 +1,9 @@
-public class RoundRect: TileGrid {
+public class RoundRect: Tile {
     public init(x: Int, y: Int, width: Int, height: Int, radius r: Int, fill: UInt32! = nil, outline: UInt32! = nil, stroke: Int = 1) {
         let _bitmap = Bitmap(width: width, height: height, bitCount: 4)
         let _palette = Palette(count: 3)
 
-        super.init(bitmap: _bitmap, palette: _palette, x: x, y: y)
+        super.init(x: x, y: y, bitmap: _bitmap, palette: _palette)
 
         palette.makeTransparent(0)
 

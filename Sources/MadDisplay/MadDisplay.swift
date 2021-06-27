@@ -1,71 +1,62 @@
-import SwiftIO
-
-
 public final class MadDisplay {
     let screen: BitmapWritable
     let colorSpace: ColorSpace
     let transform: Transform
-    let pixelsPerWord: Int
+
     let screenArea: Area
 
-    //public init(screen: BitmapWritable, bitCount: Int) {
-    public init(screen: BitmapWritable, colorSpace: ColorSpace) {
+    var mask: [UInt32]
+    var screenBuffer: [UInt8]
+
+    public init(screen: BitmapWritable, colorSpace: ColorSpace, transform: Transform? = nil) {
         self.screen = screen
-
-        //colorSpace = ColorSpace(depth: UInt8(bitCount))
-        //colorSpace = ColorSpace()
-
         self.colorSpace = colorSpace
-        transform = Transform()
-        pixelsPerWord = 32 / Int(colorSpace.depth)
-        screenArea = Area(x1: 0, y1: 0, x2: screen.width - 1, y2: screen.height - 1)
-    }
 
-
-    func getUpdateAreas(_ area: Area) -> Area? {
-        guard let clipped = screenArea.intersection(area) else {
-            return nil
+        if transform == nil {
+            self.transform = Transform()
+        } else {
+            self.transform = transform!
         }
 
-        return clipped
-    }
+        screenArea = Area(x1: 0, y1: 0, width: screen.width, height: screen.height)
 
-    func getRefreshData(_ clipped: Area, group: Group) -> [UInt32] {
-        let pixelsPerBuffer = clipped.size
+        let pixelsPerWord = 32 / Int(colorSpace.depth)
+        let pixelsPerBuffer = screenArea.size
 
-        var bufferSize = pixelsPerBuffer / pixelsPerWord
+        var bufferWordSize = pixelsPerBuffer / pixelsPerWord
 
         if pixelsPerBuffer % pixelsPerWord != 0 {
-            bufferSize += 1
+            bufferWordSize += 1
         }
 
         let maskLength = (pixelsPerBuffer / 32) + 1
 
-        //print("pixelsPerBuffer = \(pixelsPerBuffer), buffersize = \(bufferSize), maskLength = \(maskLength)")
-        var buffer = [UInt32](repeating: 0, count: bufferSize)
-        var mask = [UInt32](repeating: 0, count: maskLength)
-
-        _ = group.fillArea(colorSpace: colorSpace, area: clipped, mask: &mask, data: &buffer)
-
-        return buffer
+        mask = [UInt32](repeating: 0, count: maskLength)
+        screenBuffer = [UInt8](repeating: 0, count: bufferWordSize * 4)
     }
 
-    public func show(_ group: Group) {
+
+    public func update(_ group: Group) {
         if group.absoluteTransform == nil {
             group.updateTransform(transform)
         }
 
-        var currentArea = group.getRefreshAreas(nil)
+        var dirtyAreas = [Area]()
+        dirtyAreas.reserveCapacity(group.size)
 
-        while currentArea != nil {
-            if let clippedArea = getUpdateAreas(currentArea!) {
-                let data = getRefreshData(clippedArea, group: group)
-                data.withUnsafeBytes { ptr in
-                    screen.writeBitmap(x: clippedArea.x1, y: clippedArea.y1, width: clippedArea.width, height: clippedArea.height, data: Array(ptr))
+        group.getRefreshAreas(&dirtyAreas)
+
+        for i in (0..<dirtyAreas.count).reversed() {
+            let area = dirtyAreas[i]
+            if let clippedArea = area.intersection(screenArea) {
+                let maskLength = clippedArea.size / 32 + 1
+                for i in 0..<maskLength {
+                    mask[i] = 0
                 }
-                //screen.writeBitmap(x: clippedArea.x1, y: clippedArea.y1, width: clippedArea.width, height: clippedArea.height, data: data)
+                group.fillArea(colorSpace: colorSpace, area: clippedArea, mask: &mask, data: &screenBuffer)
+                screen.writeBitmap(x: clippedArea.x1, y: clippedArea.y1, width: clippedArea.width, height: clippedArea.height, data: screenBuffer)
+                //print("update area: \(clippedArea)")
             }
-            currentArea = currentArea!.next
         }
 
         group.finishRefresh()

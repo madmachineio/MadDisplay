@@ -1,5 +1,5 @@
 public final class Palette {
-    struct Colors {
+    struct ColorFormats {
         var rgb888: UInt32 = 0
         var rgb565: UInt16 = 0
         var luma: UInt8 = 0
@@ -8,30 +8,21 @@ public final class Palette {
         var transparent: Bool = false
     }
 
-    var colors: [Colors]
+    var colorFormats: [ColorFormats]
     var needsRefresh = true
 
     public init(count: Int = 0) {
-        colors = [Colors]()
+        colorFormats = [ColorFormats]()
 
         if count != 0 {
-            colors = [Colors](repeating: Colors(), count: count)
-        }
-    }
-
-    func reserveCapacity(_ value: Int) {
-        if count == 0 {
-            colors = [Colors](repeating: Colors(), count: count)
-        } else if value > count {
-            let newColors = [Colors](repeating: Colors(), count: value - count)
-            colors.append(contentsOf: newColors)
+            colorFormats = [ColorFormats](repeating: ColorFormats(), count: count)
         }
     }
 }
 
 extension Palette {
     var count: Int {
-        colors.count
+        colorFormats.count
     }
 
     public func getColor(at index: Int) -> UInt32 {
@@ -39,7 +30,7 @@ extension Palette {
             return 0
         }
 
-        return colors[index].rgb888
+        return colorFormats[index].rgb888
     }
 
     public func getColor(colorSpace: ColorSpace, at index: Int) -> UInt32? {
@@ -47,29 +38,29 @@ extension Palette {
             return nil
         }
 
-        if colors[index].transparent {
+        if colorFormats[index].transparent {
             return nil
         }
 
         if colorSpace.tricolor {
-            let luma = colors[index].luma
+            let luma = colorFormats[index].luma
             var ret = UInt32(luma >> (8 - colorSpace.depth))
 
-            if colors[index].chroma <= 16 {
+            if colorFormats[index].chroma <= 16 {
                 if !colorSpace.grayscale {
                     ret = 0
                 }
             } else {
-                let hue = colors[index].hue
+                let hue = colorFormats[index].hue
                 ColorConverter.computeTricolor(colorSpace: colorSpace, hue: hue, luma: luma, color: &ret)
             }
             return ret
         } else if colorSpace.grayscale {
-            return UInt32(colors[index].luma >> (8 - colorSpace.depth))
+            return UInt32(colorFormats[index].luma >> (8 - colorSpace.depth))
         } else {
-            var packed = colors[index].rgb565
+            var packed = colorFormats[index].rgb565
             if colorSpace.reverseBytesInWord {
-                packed = (packed << 8) | (packed >> 8)
+                packed = packed.byteSwapped
             }
             return UInt32(packed)
         }
@@ -77,8 +68,8 @@ extension Palette {
 }
 
 extension Palette {
-    public func append(color: UInt32) {
-        var newColor = Colors()
+    public func append(_ color: UInt32) {
+        var newColor = ColorFormats()
 
         newColor.rgb888 = color
         newColor.luma = ColorConverter.computeLuma(color)
@@ -86,7 +77,7 @@ extension Palette {
         newColor.chroma = ColorConverter.computeChroma(color)
         newColor.hue = ColorConverter.computeHue(color)
 
-        colors.append(newColor)
+        colorFormats.append(newColor)
 
         needsRefresh = true
     }
@@ -95,7 +86,7 @@ extension Palette {
         guard index < count else {
             return
         }
-        var newColor = Colors()
+        var newColor = ColorFormats()
 
         newColor.rgb888 = color
         newColor.luma = ColorConverter.computeLuma(color)
@@ -103,7 +94,7 @@ extension Palette {
         newColor.chroma = ColorConverter.computeChroma(color)
         newColor.hue = ColorConverter.computeHue(color)
 
-        colors[index] = newColor
+        colorFormats[index] = newColor
 
         needsRefresh = true
     }
@@ -118,11 +109,13 @@ extension Palette {
     }
 
     public func makeOpaque(_ index: Int) {
-        colors[index].transparent = false 
+        colorFormats[index].transparent = false 
+        needsRefresh = true
     }
 
     public func makeTransparent(_ index: Int) {
-        colors[index].transparent = true
+        colorFormats[index].transparent = true
+        needsRefresh = true
     }
 
 
