@@ -195,9 +195,6 @@ public final class Label: Group {
         text = newText
         boundingBox = (left, top, right - left, bottom - top)
 
-        if backgroundColor != nil {
-            updateBackgroundColor(backgroundColor)
-        }
-
+        updateBackgroundColor(backgroundColor)
     }
 }

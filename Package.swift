@@ -21,8 +21,5 @@ let package = Package(
         .target(
             name: "MadDisplay",
             dependencies: ["SwiftIO"]),
-        .testTarget(
-            name: "MadDisplayTests",
-            dependencies: ["MadDisplay"]),
     ]
 )
