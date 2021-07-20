@@ -19,12 +19,13 @@ public class Polygon: Tile {
         let _palette = Palette(count: 3)
         _palette.makeTransparent(0)
 
-        let _bitmap = Bitmap(width: width, height: height, bitCount: 4)
+        let _bitmap = Bitmap(width: width, height: height, bitCount: 2)
 
         super.init(x: xOffset, y: yOffset, bitmap: _bitmap, palette: _palette)
 
         if let outline = outline {
             palette[1] = outline
+
             for index in 0..<points.count{
                 let pointA = points[index]
                 let pointB: Point
@@ -33,7 +34,11 @@ public class Polygon: Tile {
                 } else {
                     pointB = points[0]
                 }
-                line(x0: pointA.x, y0: pointA.y, x1: pointB.x, y1: pointB.y, color: 1)
+                line(x0: pointA.x - xOffset,
+                     y0: pointA.y - yOffset,
+                     x1: pointB.x - xOffset,
+                     y1: pointB.y - yOffset,
+                     color: 1)
             }
         }
     }
@@ -77,7 +82,6 @@ public class Polygon: Tile {
             } else {
                 yStep = -1
             }
-
             for x in x0..<x1 {
                 if steep {
                     bitmap[y0, x] = color
