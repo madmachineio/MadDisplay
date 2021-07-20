@@ -167,6 +167,11 @@ public final class Label: Group {
             let positionY = y - glyph.height - glyph.dy + yOffset
             let positionX = x + glyph.dx
 
+            //print("top = \(top), left = \(left), bottom = \(bottom)")
+            //print("posX = \(positionX), posY = \(positionY)")
+            
+            //print(glyph.bitmap!.data)
+
             if glyph.width > 0 && glyph.height > 0 {
                 let face = Tile(    x: positionX,
                                     y: positionY,
@@ -195,6 +200,8 @@ public final class Label: Group {
         text = newText
         boundingBox = (left, top, right - left, bottom - top)
 
-        updateBackgroundColor(backgroundColor)
+        if backgroundColor != nil {
+            updateBackgroundColor(backgroundColor)
+        }
     }
 }

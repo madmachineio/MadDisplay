@@ -355,8 +355,7 @@ public class Tile {
                 } else {
                     outputPixel.opaque = false
                 }
-
-                if !outputPixel.opaque {
+                if outputPixel.opaque == false {
                     fullCoverage = false
                 } else {
                     mask[offset / 32] |= 1 << (offset % 32)
@@ -386,7 +385,6 @@ public class Tile {
                 }
             }
         }
-
         return fullCoverage
     }
 

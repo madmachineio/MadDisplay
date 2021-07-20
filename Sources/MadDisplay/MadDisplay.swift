@@ -45,13 +45,18 @@ public final class MadDisplay {
         dirtyAreas.reserveCapacity(group.size)
 
         group.getRefreshAreas(&dirtyAreas)
+        //print(dirtyAreas)
 
         for i in (0..<dirtyAreas.count).reversed() {
             let area = dirtyAreas[i]
             if let clippedArea = area.intersection(screenArea) {
                 let maskLength = clippedArea.size / 32 + 1
-                for i in 0..<maskLength {
-                    mask[i] = 0
+                for m in 0..<maskLength {
+                    mask[m] = 0
+                }
+                let bufferLength = clippedArea.size * Int(colorSpace.depth)
+                for n in 0..<bufferLength {
+                    screenBuffer[n] = 0
                 }
                 group.fillArea(colorSpace: colorSpace, area: clippedArea, mask: &mask, data: &screenBuffer)
                 screen.writeBitmap(x: clippedArea.x1, y: clippedArea.y1, width: clippedArea.width, height: clippedArea.height, data: screenBuffer)
