@@ -4,6 +4,7 @@ public final class MadDisplay {
     let transform: Transform
 
     let screenArea: Area
+    let pixelsPerWord: Int
 
     var mask: [UInt32]
     var screenBuffer: [UInt8]
@@ -20,8 +21,8 @@ public final class MadDisplay {
 
         screenArea = Area(x1: 0, y1: 0, width: screen.width, height: screen.height)
 
-        let pixelsPerWord = 32 / Int(colorSpace.depth)
         let pixelsPerBuffer = screenArea.size
+        pixelsPerWord = 32 / Int(colorSpace.depth)
 
         var bufferWordSize = pixelsPerBuffer / pixelsPerWord
 
@@ -45,22 +46,24 @@ public final class MadDisplay {
         dirtyAreas.reserveCapacity(group.size)
 
         group.getRefreshAreas(&dirtyAreas)
-        //print(dirtyAreas)
 
         for i in (0..<dirtyAreas.count).reversed() {
             let area = dirtyAreas[i]
             if let clippedArea = area.intersection(screenArea) {
-                let maskLength = clippedArea.size / 32 + 1
+                let pixelsPerBuffer = clippedArea.size
+                var bufferWordSize = pixelsPerBuffer / pixelsPerWord
+                if pixelsPerBuffer % pixelsPerWord != 0 {
+                    bufferWordSize += 1
+                }
+                for n in 0..<(bufferWordSize * 4) {
+                    screenBuffer[n] = 0
+                }
+                let maskLength = pixelsPerBuffer / 32 + 1
                 for m in 0..<maskLength {
                     mask[m] = 0
                 }
-                let bufferLength = clippedArea.size * Int(colorSpace.depth)
-                for n in 0..<bufferLength {
-                    screenBuffer[n] = 0
-                }
                 group.fillArea(colorSpace: colorSpace, area: clippedArea, mask: &mask, data: &screenBuffer)
                 screen.writeBitmap(x: clippedArea.x1, y: clippedArea.y1, width: clippedArea.width, height: clippedArea.height, data: screenBuffer)
-                //print("update area: \(clippedArea)")
             }
         }
 
