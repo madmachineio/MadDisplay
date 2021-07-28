@@ -4,14 +4,17 @@ public final class Triangle: Polygon {
         
         if y0 > y1 {
             swap(&y0, &y1)
+            swap(&x0, &x1)
         }
 
         if y1 > y2 {
             swap(&y1, &y2)
+            swap(&x1, &x2)
         }
 
-        if y0 > y2 {
-            swap(&y0, &y2)
+        if y0 > y1 {
+            swap(&y0, &y1)
+            swap(&x0, &x1)
         }
 
         let xs = [x0, x1, x2]
