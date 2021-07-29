@@ -9,20 +9,21 @@ public final class MadDisplay {
     var mask: [UInt32]
     var screenBuffer: [UInt8]
 
-    public init(screen: BitmapWritable, colorSpace: ColorSpace, transform: Transform? = nil) {
+    public init(screen: BitmapWritable, colorSpace: ColorSpace? = nil) {
         self.screen = screen
-        self.colorSpace = colorSpace
 
-        if transform == nil {
-            self.transform = Transform()
+        if colorSpace == nil {
+            self.colorSpace = screen.colorSpace
         } else {
-            self.transform = transform!
+            self.colorSpace = colorSpace!
         }
+
+        self.transform = Transform()
 
         screenArea = Area(x1: 0, y1: 0, width: screen.width, height: screen.height)
 
         let pixelsPerBuffer = screenArea.size
-        pixelsPerWord = 32 / Int(colorSpace.depth)
+        pixelsPerWord = 32 / Int(self.colorSpace.depth)
 
         var bufferWordSize = pixelsPerBuffer / pixelsPerWord
 

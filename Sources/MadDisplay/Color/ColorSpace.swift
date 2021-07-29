@@ -1,14 +1,14 @@
 public struct ColorSpace {
-    public let depth: UInt8
-    public let bytesPerCell: UInt8
-    public let tricolorHue: UInt8
-    public let tricolorLuma: UInt8
-    public let tricolor: Bool
-    public let grayscale: Bool
-    public let pixelsInByteShareRow: Bool
-    public let reversePixelsInByte: Bool
-    public let reverseBytesInWord: Bool
-    public let dither: Bool
+    public var depth: UInt8
+    public var bytesPerCell: UInt8
+    public var tricolorHue: UInt8
+    public var tricolorLuma: UInt8
+    public var tricolor: Bool
+    public var grayscale: Bool
+    public var pixelsInByteShareRow: Bool
+    public var reversePixelsInByte: Bool
+    public var reverseBytesInWord: Bool
+    public var dither: Bool
 
     public init(depth: UInt8 = 16,
                 bytesPerCell: UInt8 = 1,
