@@ -20,7 +20,8 @@ public class Tile {
     var bitmap: Bitmap
     var bitmapWidth, bitmapHeight: Int
 
-    var palette: Palette
+    var palette: Palette!
+    var colorConverter: ColorConverter?
 
     var dirtyArea: Area
     var currentArea: Area
@@ -36,6 +37,7 @@ public class Tile {
 
         self.bitmap = bitmap
         self.palette = palette
+        self.colorConverter = nil
 
         bitmapWidth = bitmap.width
         bitmapHeight = bitmap.height
@@ -47,6 +49,24 @@ public class Tile {
         options = []
     }
 
+    public init(x: Int = 0, y: Int = 0, bitmap: Bitmap, colorConverter: ColorConverter) {
+
+        self.x = x
+        self.y = y
+
+        self.bitmap = bitmap
+        self.palette = nil
+        self.colorConverter = colorConverter
+
+        bitmapWidth = bitmap.width
+        bitmapHeight = bitmap.height
+
+        dirtyArea = Area(x1: x, y1: y, width: bitmapWidth, height: bitmapHeight)
+        currentArea = dirtyArea
+        previousArea = nil
+
+        options = []
+    }
 
     func getHidden() -> Bool {
         return options.contains(.hidden)
@@ -189,12 +209,19 @@ public class Tile {
         }
     }
 
-    func getPalette() -> Palette {
+    func getPalette() -> Palette? {
         return palette
     }
 
     func setPalette(_ palette: Palette) {
-        self.palette = palette
+        if bitmap.indexed {
+            self.palette = palette
+            options.insert(.fullChange)
+        }
+    }
+
+    func copyBitmap(from source: Bitmap) {
+        bitmap.memoryCopy(source.data)
         options.insert(.fullChange)
     }
 
@@ -348,13 +375,17 @@ public class Tile {
 
                 inputPixel.pixel = bitmap.getPixel(x: inputPixel.tileX, y: inputPixel.tileY)
 
-
-                if let ret = palette.getColor(colorSpace: colorSpace, at: Int(inputPixel.pixel)) {
-                    outputPixel.opaque = true
-                    outputPixel.pixel = ret
+                if bitmap.indexed {
+                    if let ret = palette!.getColor(colorSpace: colorSpace, at: Int(inputPixel.pixel)) {
+                        outputPixel.opaque = true
+                        outputPixel.pixel = ret
+                    } else {
+                        outputPixel.opaque = false
+                    }
                 } else {
-                    outputPixel.opaque = false
+                    outputPixel = colorConverter!.convert(colorSpace: colorSpace, inputPixel: inputPixel)
                 }
+
                 if outputPixel.opaque == false {
                     fullCoverage = false
                 } else {
@@ -400,7 +431,7 @@ public class Tile {
         }
 
         options.remove([.moved, .fullChange, .partialChange])
-        palette.finishRefresh()
+        palette?.finishRefresh()
         bitmap.finishRefresh()
     }
 
@@ -431,8 +462,10 @@ public class Tile {
             options.insert(.partialChange)
         }
 
-        if palette.needsRefresh {
-            options.insert(.fullChange)
+        if let ret = palette?.needsRefresh {
+            if ret && bitmap.indexed {
+                options.insert(.fullChange)
+            }
         }
 
         if options.contains(.fullChange) || firstDraw {
@@ -465,7 +498,3 @@ public class Tile {
     }
 }
 
-
-extension Tile {
-
-}

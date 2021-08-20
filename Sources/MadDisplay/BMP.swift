@@ -25,15 +25,17 @@ public struct BMP {
     let header = UInt16(0x4D42)
     let file: FileDescriptor
 
-    var palette: Palette! = nil
     var bitmap: Bitmap! = nil
+    var palette: Palette! = nil
+    var colorConverter: ColorConverter? = nil
 
-    var bitsPerPixel: Int = 0
     var width: Int = 0
     var height: Int = 0
+    var bitsPerPixel: Int = 0
+    var compression: Bool  = false
 
 
-    public init(path: String) {
+    public init(path: String, transparentColor: UInt32? = nil) {
         var bfType = UInt16(0)
         var fileHeader = FileHeader()
         var infoHeader = InfoHeader()
@@ -49,70 +51,93 @@ public struct BMP {
 
         _ = withUnsafeMutableBytes(of: &fileHeader) { buffer in
             file.read(fromAbsoluteOffest: 2, into: buffer)
-            for i in 0..<buffer.count {
-                print("\(i) = \(buffer[i])")
-            }
         }
-        withUnsafeBytes(of: fileHeader) { buffer in
-            for i in 0..<buffer.count {
-                print("\(i) = \(buffer[i])")
-            }
-        }
+
         _ = withUnsafeMutableBytes(of: &infoHeader) { buffer in
             file.read(fromAbsoluteOffest: 14, into: buffer)
         }
 
-        print("size of fileHeader: \(MemoryLayout<FileHeader>.size)")
-        print("size of infoHeader: \(MemoryLayout<InfoHeader>.size)")
         print(fileHeader)
         print(infoHeader)
 
-        bitsPerPixel = Int(infoHeader.biBitCount)
         width = Int(infoHeader.biWidth)
         height = Int(infoHeader.biHeight)
+        bitsPerPixel = Int(infoHeader.biBitCount)
+        compression = infoHeader.biCompression == 3
 
-        let colorCount = 1 << bitsPerPixel
-        var colors = [UInt32](repeating: 0, count: colorCount)
-
-        colors.withUnsafeMutableBytes { buffer in
-            file.read(into: buffer)
-        }
-
-        palette = Palette(count: colorCount)
-        //palette.reserveCapacity(colorCount)
-        for i in 0..<colorCount {
-            palette[i] = colors[i]
-        }
-
-        if colors[0] == 0x00000000 {
-            palette.makeTransparent(0)
-        }
-        
-
-        bitmap = Bitmap(width: width, height: height, bitCount: bitsPerPixel)
         let bytesPerLine = (bitsPerPixel * width + 31) / 32 * 4 
         let imageByteSize = bytesPerLine * height
 
         var imageData = [UInt32](repeating: 0x0, count: imageByteSize / 4)
-
-        print("bitmap uint32 size = \(bitmap.data.count), image uint32 size = \(imageData.count)")
-        imageData.withUnsafeMutableBytes { buffer in
+        _ = imageData.withUnsafeMutableBytes { buffer in
             file.read(fromAbsoluteOffest: Int(fileHeader.bfOffBits), into: buffer)
         }
 
-        if bitsPerPixel < 8 {
-            bitmap.MSBMemoryCopy(imageData)
+        if bitsPerPixel > 8 {
+            print("------colorconverter--------")
+            colorConverter = ColorConverter(transparentColor: transparentColor)
+
+            bitmap = Bitmap(width: width, height: height, bitCount: 32)
+
+            if bitsPerPixel == 32 {
+                for y in 0..<height {
+                    for x in 0..<width {
+                        bitmap.data[y * width + x] = imageData[(height - y - 1) * width + x]
+                    }
+                }
+            } else if bitsPerPixel == 24 {
+                for y in 0..<height {
+                    for x in 0..<width {
+                        let byteOffset = (height - y - 1) * bytesPerLine + x * 3
+                        var color32: UInt32 = 0
+                        imageData.withUnsafeBytes { ptr in
+                            let r = UInt32(ptr[byteOffset + 2]) << 16
+                            let g = UInt32(ptr[byteOffset + 1]) << 8
+                            let b = UInt32(ptr[byteOffset + 0])
+                            color32 = r | g | b
+                        }
+                        bitmap.data[y * width + x] = color32
+                    }
+                }
+            }
         } else {
-            bitmap.memoryCopy(imageData)
-        }
-        
-        imageData = bitmap.data
-        let uint32CountPerLine = bytesPerLine / 4
-        for r in 0..<height {
-            for c in 0..<uint32CountPerLine {
-                bitmap.data[r * uint32CountPerLine + c] = imageData[(height - r - 1) * uint32CountPerLine + c]
+            print("------indexed--------")
+            let colorCount = 1 << bitsPerPixel
+            var colors = [UInt32](repeating: 0, count: colorCount)
+
+            _ = colors.withUnsafeMutableBytes { buffer in
+                file.read(fromAbsoluteOffest: 54, into: buffer)
+            }
+
+            palette = Palette(count: colorCount)
+            for i in 0..<colorCount {
+                palette[i] = colors[i]
+            }
+            if let trans = transparentColor {
+                if colors[0] == trans {
+                    palette.makeTransparent(0)
+                }
+            }
+            print("bitsPerPixel = \(bitsPerPixel)")
+            bitmap = Bitmap(width: width, height: height, bitCount: bitsPerPixel)
+
+            if bitsPerPixel < 8 {
+                imageData = imageData.map {
+                    $0.byteSwapped
+                }
+            }
+            
+            print("bitmap uint32 size = \(bitmap.data.count), image uint32 size = \(imageData.count)")
+            let uint32CountPerLine = bytesPerLine / 4
+            for r in 0..<height {
+                for c in 0..<uint32CountPerLine {
+                    bitmap.data[r * uint32CountPerLine + c] = imageData[(height - r - 1) * uint32CountPerLine + c]
+                }
             }
         }
+
+
+
 
         file.close()
     }
@@ -121,8 +146,12 @@ public struct BMP {
         return bitmap
     }
 
-    public func getPalette() -> Palette {
+    public func getPalette() -> Palette? {
         return palette
+    }
+
+    public func getColorConverter() -> ColorConverter? {
+        return colorConverter
     }
 
 }

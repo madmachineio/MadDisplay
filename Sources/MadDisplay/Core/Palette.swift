@@ -58,11 +58,12 @@ extension Palette {
         } else if colorSpace.grayscale {
             return UInt32(colorFormats[index].luma >> (8 - colorSpace.depth))
         } else {
-            var packed = colorFormats[index].rgb565
+            let packed = colorFormats[index].rgb565
             if colorSpace.reverseBytesInWord {
-                packed = packed.byteSwapped
+                return UInt32(packed.byteSwapped)
+            } else {
+                return UInt32(packed)
             }
-            return UInt32(packed)
         }
     }
 }

@@ -2,6 +2,7 @@ public final class Bitmap {
 
     let width: Int
     let height: Int
+    let indexed: Bool
 
     private let bitsPerPixel: Int
 
@@ -30,9 +31,16 @@ public final class Bitmap {
             fatalError("Invalid bitCount per pixel: \(bitCount)")
         }
 
+
         self.width = width
         self.height = height
         self.bitsPerPixel = bitCount
+
+        if bitCount > 8 {
+            indexed = false
+        } else {
+            indexed = true
+        }
 
         uint32Bytes = MemoryLayout<UInt32>.size
         alignBits = 8 * uint32Bytes
@@ -132,7 +140,6 @@ extension Bitmap {
         }
 
         setDirtyArea(bitmapArea)
-
         data = value
     }
 
@@ -143,7 +150,6 @@ extension Bitmap {
         }
 
         setDirtyArea(bitmapArea)
-
         data = value.map {
             $0.byteSwapped
         }
