@@ -30,14 +30,18 @@ public class Tile {
     var options: TileOptions
     var absoluteTransform: Transform!
 
-    public init(x: Int = 0, y: Int = 0, bitmap: Bitmap, palette: Palette) {
+    public init(x: Int = 0, y: Int = 0, bitmap: Bitmap, palette: Palette? = nil, colorConverter: ColorConverter? = nil) {
+        guard palette != nil || colorConverter != nil else {
+            fatalError("error: palette and colorConverter could not be both nil")
+        }
+
 
         self.x = x
         self.y = y
 
         self.bitmap = bitmap
         self.palette = palette
-        self.colorConverter = nil
+        self.colorConverter = colorConverter
 
         bitmapWidth = bitmap.width
         bitmapHeight = bitmap.height
@@ -48,7 +52,7 @@ public class Tile {
 
         options = []
     }
-
+/*
     public init(x: Int = 0, y: Int = 0, bitmap: Bitmap, colorConverter: ColorConverter) {
 
         self.x = x
@@ -67,7 +71,7 @@ public class Tile {
 
         options = []
     }
-
+*/
     func getHidden() -> Bool {
         return options.contains(.hidden)
     }
@@ -77,6 +81,7 @@ public class Tile {
             options.insert(.hidden)
         } else {
             options.remove(.hidden)
+            options.insert(.fullChange)
         }
     }
 
@@ -85,6 +90,7 @@ public class Tile {
             options.insert(.hiddenByParent)
         } else {
             options.remove(.hiddenByParent)
+            options.insert(.fullChange)
         }
     }
 

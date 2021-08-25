@@ -34,7 +34,6 @@ public struct BMP {
     var bitsPerPixel: Int = 0
     var compression: Bool  = false
 
-
     public init(path: String, transparentColor: UInt32? = nil) {
         var bfType = UInt16(0)
         var fileHeader = FileHeader()
@@ -57,8 +56,8 @@ public struct BMP {
             file.read(fromAbsoluteOffest: 14, into: buffer)
         }
 
-        print(fileHeader)
-        print(infoHeader)
+        //print(fileHeader)
+        //print(infoHeader)
 
         width = Int(infoHeader.biWidth)
         height = Int(infoHeader.biHeight)
@@ -74,9 +73,7 @@ public struct BMP {
         }
 
         if bitsPerPixel > 8 {
-            print("------colorconverter--------")
-            colorConverter = ColorConverter(transparentColor: transparentColor)
-
+            //print("------not indexed--------")
             bitmap = Bitmap(width: width, height: height, bitCount: 32)
 
             if bitsPerPixel == 32 {
@@ -101,7 +98,7 @@ public struct BMP {
                 }
             }
         } else {
-            print("------indexed--------")
+            //print("------indexed--------")
             let colorCount = 1 << bitsPerPixel
             var colors = [UInt32](repeating: 0, count: colorCount)
 
@@ -118,7 +115,7 @@ public struct BMP {
                     palette.makeTransparent(0)
                 }
             }
-            print("bitsPerPixel = \(bitsPerPixel)")
+            //print("bitsPerPixel = \(bitsPerPixel)")
             bitmap = Bitmap(width: width, height: height, bitCount: bitsPerPixel)
 
             if bitsPerPixel < 8 {
@@ -127,7 +124,7 @@ public struct BMP {
                 }
             }
             
-            print("bitmap uint32 size = \(bitmap.data.count), image uint32 size = \(imageData.count)")
+            //print("bitmap uint32 size = \(bitmap.data.count), image uint32 size = \(imageData.count)")
             let uint32CountPerLine = bytesPerLine / 4
             for r in 0..<height {
                 for c in 0..<uint32CountPerLine {
@@ -135,9 +132,6 @@ public struct BMP {
                 }
             }
         }
-
-
-
 
         file.close()
     }
@@ -149,9 +143,4 @@ public struct BMP {
     public func getPalette() -> Palette? {
         return palette
     }
-
-    public func getColorConverter() -> ColorConverter? {
-        return colorConverter
-    }
-
 }

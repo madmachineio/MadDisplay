@@ -64,6 +64,16 @@ extension Group {
         }
     }
 
+    public func setHidden(_ value: Bool, at layer: Int) {
+        if layer >= size {
+	    return
+        }
+        if let t = children[layer] as? Tile {
+            t.setHiddenByParent(value)
+        } else if let g = children[layer] as? Group {
+            g.setHiddenByParent(value)
+        }
+    }
 
     func setHiddenByParent(_ value: Bool) {
         if options.contains(.hiddenByParent) == value {
