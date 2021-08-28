@@ -77,20 +77,28 @@ public class Tile {
     }
 
     func setHidden(_ value: Bool) {
+        let hidden = options.contains(.hidden) || options.contains(.hiddenByParent)
+
         if value {
             options.insert(.hidden)
         } else {
             options.remove(.hidden)
-            options.insert(.fullChange)
+            if hidden != value {
+                options.insert(.fullChange)
+            }
         }
     }
 
     func setHiddenByParent(_ value: Bool) {
+        let hidden = options.contains(.hidden) || options.contains(.hiddenByParent)
+
         if value {
             options.insert(.hiddenByParent)
         } else {
             options.remove(.hiddenByParent)
-            options.insert(.fullChange)
+            if hidden != value {
+                options.insert(.fullChange)
+            }
         }
     }
 
@@ -432,7 +440,8 @@ public class Tile {
 
         if !firstDraw && hidden {
             previousArea = nil
-        } else if firstDraw || options.contains(.moved) {
+        // TODO
+        } else if (firstDraw && !hidden) || options.contains(.moved) {
             previousArea = currentArea
         }
 
