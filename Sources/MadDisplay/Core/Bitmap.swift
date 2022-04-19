@@ -1,3 +1,4 @@
+/// Create a bitmap and set all its pixels with indexed colors.
 public final class Bitmap {
 
     let width: Int

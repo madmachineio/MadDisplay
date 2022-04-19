@@ -1,3 +1,4 @@
+/// Create a palette to store true colors in order for a bitmap.
 public final class Palette {
     struct ColorFormats {
         var rgb888: UInt32 = 0

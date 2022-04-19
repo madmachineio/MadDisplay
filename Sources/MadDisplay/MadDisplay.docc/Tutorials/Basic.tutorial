@@ -1,0 +1,57 @@
+@Tutorial(time: 30) {
+    @Intro(title: "Basic") {
+        In this tutorial, you will learn the basic usage to draw some stuff on a screen.
+        
+        @Image(source: <#file#>, alt: "<#accessible description#>")
+    }
+
+    @Section(title: "Create a display") {
+        @ContentAndMedia {
+            Create a display instance which will be used to display all graphics to the screen.
+            
+            @Image(source: <#file#>, alt: "<#accessible description#>")
+        }
+        
+        @Steps {
+            @Step {
+                Import the necessary libraries.
+                
+                @Code(name: "main.swift", file: basic01.swift)
+            }
+            
+            @Step {
+                Initialize a screen, an ST7789 LCD for example.
+                
+                @Code(name: "main.swift", file: basic02.swift)
+            }
+
+            @Step {
+                Create a display instance using the screen instance above.
+                
+                @Code(name: "main.swift", file: basic03.swift)
+            }
+        }
+    }
+    
+    @Section(title: "Create a palette") {
+        @ContentAndMedia {
+            Create a palette to stores colors that will be used for a bitmap later.
+            
+            @Image(source: <#file#>, alt: "<#accessible description#>")
+        }
+        
+        @Steps {
+            @Step {
+                Initialize a palette. By default, it has no color.
+                
+                @Code(name: "main.swift", file: basic04.swift)
+            }
+            
+            @Step {
+                Add colors to the palette.
+                
+                @Code(name: "main.swift", file: basic05.swift)
+            }
+        }
+    }
+}
