@@ -23,6 +23,11 @@ public final class Bitmap {
 
     public var data: [UInt32]
 
+    /// Initialize a bitmap by setting its size and the amount of possible colors.
+    /// - Parameters:
+    ///   - width: the width of the bitmap.
+    ///   - height: the height of the bitmap.
+    ///   - bitCount: the count of possible colors.
     public init(width: Int, height: Int, bitCount: Int) {
         guard width > 0 && height > 0 else {
             fatalError("Bitmap width and height must greater than 0!")
@@ -31,7 +36,6 @@ public final class Bitmap {
         guard bitCount == 1 || bitCount == 2 || bitCount == 4 || bitCount == 8 || bitCount == 16 || bitCount == 32 else {
             fatalError("Invalid bitCount per pixel: \(bitCount)")
         }
-
 
         self.width = width
         self.height = height
@@ -160,6 +164,11 @@ extension Bitmap {
         dirtyArea = nil
     }
 
+    /// Set a designated pixel of the bitmap to an indexed color.
+    /// - Parameters:
+    ///   - x: the x-coordinate of the pixel. Its value should not be bigger than width-1.
+    ///   - y: the y-coordinate of the pixel. Its value should not be bigger than height-1.
+    ///   - value: a color value in UInt32. When used with a palette, the value should be the index of the color in it.
     public func setPixel(x: Int, y: Int, _ value: UInt32) {
         guard !readOnly else {
             return

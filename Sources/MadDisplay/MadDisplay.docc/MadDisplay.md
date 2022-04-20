@@ -63,7 +63,7 @@ Other classes provide additional functionalities (shapes, texts and image) based
 
 ### Display
 
-- ``MadDisplay``
+- ``MadDisplay/MadDisplay``
 
 ### Shapes
 

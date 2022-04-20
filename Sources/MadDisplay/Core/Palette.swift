@@ -12,6 +12,8 @@ public final class Palette {
     var colorFormats: [ColorFormats]
     var needsRefresh = true
 
+    /// Initialize a palette to store colors. All colors will be black by default.
+    /// - Parameter count: the possible amount of colors in the palette after initialization. By default, it has no color.
     public init(count: Int = 0) {
         colorFormats = [ColorFormats]()
 
@@ -26,6 +28,9 @@ extension Palette {
         colorFormats.count
     }
 
+    /// Get the color at a specified index in the palette.
+    /// - Parameter index: the index of color in the palette.
+    /// - Returns: a UInt32 color value.
     public func getColor(at index: Int) -> UInt32 {
         guard index < count else {
             return 0
@@ -70,6 +75,8 @@ extension Palette {
 }
 
 extension Palette {
+    /// Add a new color to the end of the palette.
+    /// - Parameter color: a color value in UInt32.
     public func append(_ color: UInt32) {
         var newColor = ColorFormats()
 
@@ -84,6 +91,11 @@ extension Palette {
         needsRefresh = true
     }
 
+    /// Replace the specified color in the palette to a new one.
+    /// - Parameters:
+    ///   - color: the new color in UInt32.
+    ///   - index: the index of the color to be changed in the palette. The
+    ///   maximum index is count-1.
     public func setColor(_ color: UInt32, at index: Int) {
         guard index < count else {
             return

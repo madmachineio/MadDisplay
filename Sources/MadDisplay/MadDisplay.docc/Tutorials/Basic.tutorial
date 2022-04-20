@@ -1,26 +1,33 @@
-@Tutorial(time: 30) {
+@Tutorial(time: 10) {
     @Intro(title: "Basic") {
-        In this tutorial, you will learn the basic usage to draw some stuff on a screen.
+        In this tutorial, you will learn the basic usage to draw some stuff on a screen. You will get familiar with bitmap, palette, tile and group.
         
-        @Image(source: <#file#>, alt: "<#accessible description#>")
     }
 
-    @Section(title: "Create a display") {
+    @Section(title: "Initialize a display") {
         @ContentAndMedia {
-            Create a display instance which will be used to display all graphics to the screen.
-            
-            @Image(source: <#file#>, alt: "<#accessible description#>")
+            Create a ``MadDisplay/MadDisplay`` instance which will be used to show all graphics 
+            on a screen later.
         }
         
         @Steps {
             @Step {
                 Import the necessary libraries.
                 
-                @Code(name: "main.swift", file: basic01.swift)
+                SwiftIO is for board input and output configuration. MadBoard is 
+                for pin id. ST7789 is the screen drive. And MadDisplay is used 
+                to draw graphics.
+                
+                @Code(name: "main.swift", file: basic01.swift, previousFile: basic00.swift)
             }
             
+            
+            
             @Step {
-                Initialize a screen, an ST7789 LCD for example.
+                Initialize a screen.
+                
+                Take an ST7789 LCD for example. Initailize all pins and use them 
+                to initialize the LCD.
                 
                 @Code(name: "main.swift", file: basic02.swift)
             }
@@ -35,23 +42,128 @@
     
     @Section(title: "Create a palette") {
         @ContentAndMedia {
-            Create a palette to stores colors that will be used for a bitmap later.
+            Create a ``MadDisplay/Palette`` instance to store color values (UInt32) 
+            for a bitmap.
             
-            @Image(source: <#file#>, alt: "<#accessible description#>")
+            The colors are in order. Their indexes (from 0) will be used to set
+            pixels of a bitmap.
         }
         
         @Steps {
             @Step {
                 Initialize a palette. By default, it has no color.
-                
-                @Code(name: "main.swift", file: basic04.swift)
+                                
+                @Code(name: "main.swift", file: basic04.swift, previousFile: basic03.swift)
             }
             
             @Step {
-                Add colors to the palette.
+                Add colors to the palette. 
+                
+                The order of the colors is important. Here, the index of white 
+                is 0 and yellow is 1.
+                > Tip: The common colors are listed in ``MadDisplay/Color``. You could 
+                also use other colors by defining their color code in UInt32.
+                
                 
                 @Code(name: "main.swift", file: basic05.swift)
             }
+        }
+    }
+    
+    @Section(title: "Create a bitmap") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/Bitmap`` instance and set its pixels. The pixels doesn't
+            store the true color values but indexes of palette. 
+        }
+        
+        @Steps {
+            @Step {
+                Initialize a bitmap by setting its size and the count of colors 
+                (2 to the power of `bitCount`).
+                
+                This statement creates a 240*240 bitmap with 2 possible colors.
+                
+                @Code(name: "main.swift", file: basic06.swift, previousFile: basic05.swift)
+            }
+            
+            @Step {
+                Set pixels of the bitmap. The coordinates of pixels start from 0 
+                to 239. The origin (0,0) is on the upper left corner of the bitmap.
+                The x-coordinates increase from left to right. The y-coordinates 
+                increase downwards.
+                
+                By default, all pixels are set the first color of its palette.
+                Then the pixels (60,60) to (80,80) are set to the color whose 
+                index is 1 in a palette, that is, the second color.
+                
+                > Tip: As you can see, the pixels only stores the indexes of colors.
+                So you can use any palette with the bitmap, as long as that palette 
+                has (more than) two colors.
+                
+                @Code(name: "main.swift", file: basic07.swift)
+            }
+        }
+    }
+    
+    @Section(title: "Create a Tile") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/Tile`` instance using a bitmap and a palette.
+            All pixels in the bitmap will obtain its color from the palette.
+        }
+        
+        @Steps {
+            @Step {
+                Initialize a tile with the bitmap and palette above. 
+                
+                The default location of tile is (0,0). A tile's position is relative
+                to the group to which it belongs.
+                
+                @Code(name: "main.swift", file: basic08.swift, previousFile: basic07.swift)
+            }
+            
+        }
+    }
+    
+    @Section(title: "Create a group") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/Group`` instance. A group can contain tiles 
+            and groups to organize all graphics. In this way, you can change 
+            one of its tiles, or change the entire group easily.
+        }
+        
+        @Steps {
+            @Step {
+                Initialize a group. It is like an empty contain at present. 
+                
+                You can set its position relative to the screen and the scale 
+                to resize all its content.
+                
+                @Code(name: "main.swift", file: basic09.swift, previousFile: basic08.swift)
+            }
+            
+            @Step {
+                Add the tile to the group.
+                                
+                @Code(name: "main.swift", file: basic10.swift)
+            }
+        }
+    }
+    
+    @Section(title: "Update the display") {
+        @ContentAndMedia {
+            Display the group on the screen.
+        }
+        
+        @Steps {
+            @Step {
+                Update the display with the specified group. 
+                
+                The change made to the group later won't be updated automatically.
+                You'll have to update again to show it on the screen.
+                
+                @Code(name: "main.swift", file: basic11.swift, previousFile: basic10.swift)
+            }
+            
         }
     }
 }

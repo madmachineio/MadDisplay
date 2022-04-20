@@ -18,3 +18,14 @@ palette.append(Color.white)
 palette.append(Color.yellow)
 
 let bitmap = Bitmap(width: 240, height: 240, bitCount: 1)
+
+for x in 60...180 {
+    for y in 60...180 {
+        bitmap.setPixel(x:x, y:y, 1)
+    }
+}
+
+let tile = Tile(bitmap: bitmap, palette: palette)
+
+let group = Group()
+group.append(tile)
