@@ -76,10 +76,19 @@ Other classes provide additional functionalities (shapes, texts and image) based
 
 ### Text
 
-- ``Lable``
+- ``Label``
 - ``PCFFont``
+- ``RobotRegular16``
+- ``ASCII8``
 
 
 ### Image
 
 - ``BMP``
+
+
+### Color
+
+- ``Color``
+- ``ColorSpace``
+- ``ColorConverter``

@@ -1,3 +1,8 @@
+/// Create a group to gather tiles and groups for display.
+///
+/// For your final display, you need to put all your elements in one group,
+/// including tiles and groups. Each elements constitute one layer. You could
+/// decide the order of layers to determine how the group shows on the screen.
 public class Group {
 
     struct GroupOptions: OptionSet {
@@ -22,6 +27,18 @@ public class Group {
         children.count
     }
 
+    /// Initialize a group by setting its position and the size of all its elements.
+    ///
+    /// The position of a group is decided by its upper left pixel relative to
+    /// screen, the origin by default.
+    /// After you set the value for scale, all elements in that group will be scaled.
+    /// For a scale of 2, 1 pixel is resized to 4 (2*2) pixels. So the area is
+    /// actually 4 (the square of scale) times the original size.
+    /// - Parameters:
+    ///   - x: the x coordinate of the upper left corner, 0 by default.
+    ///   - y: the y coordinate of the upper left corner, 0 by default.
+    ///   - scale: an integer that decides how the group will be enlarge, 1 by
+    ///   default, which means the original size.
     public init(x: Int = 0, y: Int = 0, scale: Int = 1) {
         guard scale >= 1 else {
             fatalError("scale must >= 1")
@@ -185,6 +202,8 @@ extension Group {
         updateChildTransforms()
     }
 
+    /// Scale the group.
+    /// - Parameter value: the scale to resize of the group.
     public func setScale(_ value: Int) {
         if scale == value {
             return
@@ -198,14 +217,20 @@ extension Group {
         updateChildTransforms()
     } 
 
+    /// Get the position of group in x coordinate.
+    /// - Returns: the x coordinate of the upper left corner.
     public func getX() -> Int {
         return x
     }
 
+    /// Get the position of group in y coordinate.
+    /// - Returns: the y coordinate of the upper left corner.
     public func getY() -> Int {
         return y
     }
 
+    /// Change the group’s position on the screen horizontally.
+    /// - Parameter value: x coordinate of the upper left corner of the group.
     public func setX(_ value: Int) {
         if x == value {
             return
@@ -223,6 +248,8 @@ extension Group {
         updateChildTransforms()
     }
 
+    /// Change the group’s position on the screen vertically.
+    /// - Parameter value: y coordinate of the upper left corner of the group.
     public func setY(_ value: Int) {
         if y == value {
             return
@@ -258,16 +285,31 @@ extension Group {
         layer.updateTransform(absoluteTransform)
     }
 
+    /// Add an new tile to the group. This one will be on the top layer and
+    /// thus overlap those who already in the group.
+    /// - Parameter tile: the tile to be added.
     public func append(_ tile: Tile) {
         addLayer(tile)
         children.append(tile)
     }
 
+    /// Add an new group to the group. This one will be on the top layer and
+    /// thus overlap those who already in the group.
+    /// - Parameter group: the group to be added.
     public func append(_ group: Group) {
         addLayer(group)
         children.append(group)
     }
 
+    /// Insert a tile to the group at a specified position.
+    ///
+    /// The position is decided by the index which starts from 0. The index 0
+    /// refers to the first element in the group.
+    /// The index should not be bigger than the index for the existing layers
+    /// in the group.
+    /// - Parameters:
+    ///   - tile: the specified tile to be added.
+    ///   - index: the position to place the tile.
     public func insert(_ tile: Tile, at index: Int) {
         if index >= size {
             fatalError("Insert position must before the end of all children")
@@ -276,6 +318,15 @@ extension Group {
         children.insert(tile, at: index)
     }
 
+    /// Insert another group to the group at a specified position.
+    ///
+    /// The position is decided by the index which starts from 0. The index 0
+    /// refers to the first element in the group.
+    /// The index should not be bigger than the index for the existing layers
+    /// in the group.
+    /// - Parameters:
+    ///   - group: the specified group to be added.
+    ///   - index: the position to place the group.
     public func insert(_ group: Group, at index: Int) {
         if index >= size {
             fatalError("Insert position must before the end of all children")
@@ -311,11 +362,17 @@ extension Group {
     }
 
 
+    /// Remove the element (tile or group) at the specified position in the group.
+    /// - Parameter index: the position of the layer.
+    /// - Returns: the element at the specified position.
     public func remove(at index: Int) -> AnyObject {
         removeLayer(at: index)
         return children.remove(at: index)
     }
 
+    /// Remove a specified tile from the group.
+    /// - Parameter t: the tile needed to be removed.
+    /// - Returns: a boolean value to know if it’s removed.
     public func remove(_ t: Tile) -> Bool {
         if let index = children.firstIndex(where: {item in item === t}) {
             _ = remove(at: index)
@@ -324,6 +381,9 @@ extension Group {
         return false
     }
 
+    /// Remove the specified group from the group.
+    /// - Parameter g: the group needed to be removed.
+    /// - Returns: a boolean value to know if it’s removed.
     public func remove(_ g: Group) -> Bool {
         if let index = children.firstIndex(where: {item in item === g}) {
             _ = remove(at: index)
@@ -332,6 +392,8 @@ extension Group {
         return false
     }
 
+    /// Remove the last element in the group
+    /// - Returns: a boolean value to know if it’s removed.
     public func pop() -> Bool {
         if size > 0 {
             let index = size - 1
@@ -341,16 +403,26 @@ extension Group {
         return false
     }
 
+    /// Count the number of elements in the group.
+    /// - Returns: the count of element.
     public func getLength() -> Int {
         return size
     }
 
+    /// Replace an element in the group with a tile.
+    /// - Parameters:
+    ///   - tile: the tile used to replace an existing element.
+    ///   - index: the position of the element.
     public func replace(with tile: Tile, at index: Int) {
         addLayer(tile)
         removeLayer(at: index)
         children[index] = tile
     }
 
+    /// Replace an element in the group with a tile.
+    /// - Parameters:
+    ///   - group: the group used to replace an existing element.
+    ///   - index: the position of the element.
     public func replace(with group: Group, at index: Int) {
         addLayer(group)
         removeLayer(at: index)

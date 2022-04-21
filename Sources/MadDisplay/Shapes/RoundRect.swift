@@ -1,4 +1,16 @@
+/// Create rounded rectangles. A rounded rectangle consists of 4 lines and 4
+/// quarter circles. It is also a tile and needed to be added to a group for display.
 public class RoundRect: Tile {
+    /// Create a rounded rectangle.
+    /// - Parameters:
+    ///   - x: the x coordinate of the upper left corner of the tile.
+    ///   - y: the y coordinate of the upper left corner of the tile.
+    ///   - width: the width of the rectangle.
+    ///   - height: the height of the rectangle.
+    ///   - r: the radius of the rounded corner.
+    ///   - fill: the color used to fill the rectangle, nil by default.
+    ///   - outline: the color of the outline, nil by default.
+    ///   - stroke: the width of the outline, 1 by default.
     public init(x: Int, y: Int, width: Int, height: Int, radius r: Int, fill: UInt32! = nil, outline: UInt32! = nil, stroke: Int = 1) {
         let _bitmap = Bitmap(width: width, height: height, bitCount: 4)
         let _palette = Palette(count: 3)
@@ -108,6 +120,8 @@ public class RoundRect: Tile {
         }
     }
 
+    /// Fill the rounded rectangle with a specified color.
+    /// - Parameter color: a UInt32 color value.
     public func fill(color: UInt32?) {
         if let color = color {
             palette[2] = color
@@ -118,6 +132,8 @@ public class RoundRect: Tile {
         }
     }
 
+    /// Set the color of outline.
+    /// - Parameter color: a UInt32 color value.
     public func outline(color: UInt32?) {
         if let color = color {
             palette[1] = color

@@ -1,3 +1,4 @@
+/// It stores some commonly-used colors in UInt32 for eaiser reference.
 public struct Color {
     public static let white: UInt32 = 0xFFFFFF
     public static let black: UInt32 = 0x000000

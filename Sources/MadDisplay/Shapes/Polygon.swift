@@ -1,6 +1,14 @@
+/// Create polygons.
+///
+/// The polygon is formed with several vetices in order. And the last point will automatically be connected to the first point to get a closed shape. It is
+/// also a tile and needed to be added to a group for display.
 public class Polygon: Tile {
     public typealias Point = (x: Int, y: Int)
 
+    /// Create a polygon.
+    /// - Parameters:
+    ///   - points: an array of the cooridinates of all vertices in order.
+    ///   - outline: the color of the outline.
     public init(_ points: [Point], outline: UInt32? = nil) {
         var xs = [Int]()
         var ys = [Int]()

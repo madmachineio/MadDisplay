@@ -1,4 +1,16 @@
+/// Create triangles. A triangle is also a kind of polygon, but it has 3 vertex.
+/// It is also a tile and needed to be added to a group for display.
 public final class Triangle: Polygon {
+    /// Create a triangle.
+    /// - Parameters:
+    ///   - x0: x-coordinate of first vertex.
+    ///   - y0: y-coordinate of first vertex.
+    ///   - x1: x-coordinate of second vertex.
+    ///   - y1: y-coordinate of second vertex.
+    ///   - x2: x-coordinate of third vertex.
+    ///   - y2: y-coordinate of third vertex.
+    ///   - fill: the color used to fill the triangle, nil by default.
+    ///   - outline: the color of the outline, nil by default.
     public init(x0: Int, y0: Int, x1: Int, y1: Int, x2: Int, y2: Int, fill: UInt32?, outline: UInt32?) {
         var x0 = x0, y0 = y0, x1 = x1, y1 = y1, x2 = x2, y2 = y2
         
@@ -102,6 +114,8 @@ public final class Triangle: Polygon {
         }
     }
 
+    /// Fill the triangle with a specified color.
+    /// - Parameter color: a UInt32 color value.
     public func fill(color: UInt32?) {
         if let color = color {
             palette[2] = color
