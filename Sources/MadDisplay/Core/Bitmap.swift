@@ -1,4 +1,19 @@
-/// Create a bitmap and set all its pixels with indexed colors.
+/// Create a bitmap and set all its pixels.
+///
+/// For bitCount smaller than 8 (256 colors), the bitmap is indexed. It doesn't
+/// store the true color values. All pixels are set to corresponding color indexes.
+/// To know the exact colors of bitmap, you need a ``Palette``. This also means
+/// the bitmap can work with different bitmaps to get different looks.
+///
+/// To creating a bitmap, you set its size and the count of colors. For example:
+///
+/// ```swift
+/// // Create a 10*10 bitmap. It has 2 (the square of `bitCount`) possible color.
+/// let bitmap = Bitmap(width: 10, height: 10, bitCount: 1)
+/// // Set the pixel (1,1) to the color with index 1 in a palette.
+/// bitmap.setPixel(x: 1, y: 1, 1)
+/// ```
+///
 public final class Bitmap {
 
     let width: Int
@@ -27,7 +42,7 @@ public final class Bitmap {
     /// - Parameters:
     ///   - width: the width of the bitmap.
     ///   - height: the height of the bitmap.
-    ///   - bitCount: the count of possible colors.
+    ///   - bitCount: the count of possible colors - the square of `bitCount`.
     public init(width: Int, height: Int, bitCount: Int) {
         guard width > 0 && height > 0 else {
             fatalError("Bitmap width and height must greater than 0!")
@@ -164,11 +179,12 @@ extension Bitmap {
         dirtyArea = nil
     }
 
-    /// Set a designated pixel of the bitmap to an indexed color.
+    /// Set the designated pixel of the bitmap to the UInt32 color.
     /// - Parameters:
     ///   - x: the x-coordinate of the pixel. Its value should not be bigger than width-1.
     ///   - y: the y-coordinate of the pixel. Its value should not be bigger than height-1.
-    ///   - value: a color value in UInt32. When used with a palette, the value should be the index of the color in it.
+    ///   - value: a color value in UInt32. When used with a palette, it should
+    ///   be the index of the color.
     public func setPixel(x: Int, y: Int, _ value: UInt32) {
         guard !readOnly else {
             return

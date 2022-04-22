@@ -1,4 +1,13 @@
 /// Create lines. A line is also a tile and needed to be added to a group for display.
+///
+/// Here is an example:
+/// ```swift
+/// let line = Line(x0: 20, y0: 20, x1: 200, y1: 200, color: Color.red)
+///
+/// // Add the line to a group for display.
+/// let group = Group()
+/// group.append(line)
+/// ```
 public final class Line: Polygon {
     /// Create a line by setting two points.
     /// - Parameters:

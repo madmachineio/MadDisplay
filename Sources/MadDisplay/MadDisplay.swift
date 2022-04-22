@@ -2,6 +2,16 @@
 ///
 /// After you gather all elements in a group, you pass the group to the display
 /// instance to display it on the screen.
+///
+/// ```swift
+/// // let screen = ...
+/// let display = MadDisplay(screen: screen)
+///
+/// let group = Group()
+/// ...
+/// display.update(group)
+///
+/// ```
 public final class MadDisplay {
     let screen: BitmapWritable
     let colorSpace: ColorSpace
@@ -47,6 +57,8 @@ public final class MadDisplay {
 
 
     /// Display the specified group on the screen.
+    ///
+    /// This is necessary every time you change the group and want to show it.
     /// - Parameter group: the group for display.
     public func update(_ group: Group) {
         if group.absoluteTransform == nil {
