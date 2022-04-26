@@ -1,5 +1,7 @@
-/// Create lines. A line is also a tile and needed to be added to a group for display.
+/// Create lines.
 ///
+/// Two points are needed to draw a line.
+/// A line is also a tile and needed to be added to a group for display.
 /// Here is an example:
 /// ```swift
 /// let line = Line(x0: 20, y0: 20, x1: 200, y1: 200, color: Color.red)

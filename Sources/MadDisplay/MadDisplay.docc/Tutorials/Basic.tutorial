@@ -8,7 +8,9 @@
         @ContentAndMedia {
             Create a ``MadDisplay/MadDisplay`` instance which will be used to show all graphics 
             on a screen later.
+            
         }
+        
         
         @Steps {
             @Step {
@@ -28,6 +30,8 @@
                 
                 Take an ST7789 LCD for example. Initailize all pins and use them 
                 to initialize the LCD.
+                > Note: Don't forget to change the pins for the screen according 
+                to your circuit connection.
                 
                 @Code(name: "main.swift", file: basic02.swift)
             }
@@ -35,7 +39,9 @@
             @Step {
                 Create a display instance using the screen instance above.
                 
-                @Code(name: "main.swift", file: basic03.swift)
+                @Code(name: "main.swift", file: basic03.swift) {
+                    @Image(source: create-display.png, alt: "")
+                }
             }
         }
     }
@@ -47,13 +53,17 @@
             
             The colors are in order. Their indexes (from 0) will be used to set
             pixels of a bitmap.
+            
+            @Image(source: palette.png, alt: "")
         }
         
         @Steps {
             @Step {
                 Initialize a palette. By default, it has no color.
                                 
-                @Code(name: "main.swift", file: basic04.swift, previousFile: basic03.swift)
+                @Code(name: "main.swift", file: basic04.swift, previousFile: basic03.swift) {
+                    @Image(source: create-palette-00.png, alt: "")
+                }
             }
             
             @Step {
@@ -65,15 +75,18 @@
                 also use other colors by defining their color code in UInt32.
                 
                 
-                @Code(name: "main.swift", file: basic05.swift)
+                @Code(name: "main.swift", file: basic05.swift) {
+                    @Image(source: create-palette-01.png, alt: "")
+                }
             }
         }
     }
     
     @Section(title: "Create a bitmap") {
         @ContentAndMedia {
-            Create a ``MadDisplay/Bitmap`` instance and set its pixels. The pixels doesn't
-            store the true color values but indexes of palette. 
+            Create a ``MadDisplay/Bitmap`` instance and set its pixels. The pixels doesn't store the true color values but indexes of palette. 
+            
+            @Image(source: bitmap.png, alt: "")
         }
         
         @Steps {
@@ -83,7 +96,9 @@
                 
                 This statement creates a 240*240 bitmap with 2 possible colors.
                 
-                @Code(name: "main.swift", file: basic06.swift, previousFile: basic05.swift)
+                @Code(name: "main.swift", file: basic06.swift, previousFile: basic05.swift) {
+                    @Image(source: create-bitmap-00.png, alt: "")
+                }
             }
             
             @Step {
@@ -100,15 +115,19 @@
                 So you can use any palette with the bitmap, as long as that palette 
                 has (more than) two colors.
                 
-                @Code(name: "main.swift", file: basic07.swift)
+                @Code(name: "main.swift", file: basic07.swift) {
+                    @Image(source: create-bitmap-01.png, alt: "")
+                }
             }
         }
     }
     
-    @Section(title: "Create a Tile") {
+    @Section(title: "Create a tile") {
         @ContentAndMedia {
             Create a ``MadDisplay/Tile`` instance using a bitmap and a palette.
             All pixels in the bitmap will obtain its color from the palette.
+            
+            @Image(source: tile.gif, alt: "")
         }
         
         @Steps {
@@ -118,7 +137,9 @@
                 The default location of tile is (0,0). A tile's position is relative
                 to the group to which it belongs.
                 
-                @Code(name: "main.swift", file: basic08.swift, previousFile: basic07.swift)
+                @Code(name: "main.swift", file: basic08.swift, previousFile: basic07.swift) {
+                    @Image(source: create-tile.png, alt: "")
+                }
             }
             
         }
@@ -129,6 +150,8 @@
             Create a ``MadDisplay/Group`` instance. A group can contain tiles 
             and groups to organize all graphics. In this way, you can change 
             one of its tiles, or change the entire group easily.
+            
+            @Image(source: group.gif, alt: "")
         }
         
         @Steps {
@@ -144,7 +167,9 @@
             @Step {
                 Add the tile to the group.
                                 
-                @Code(name: "main.swift", file: basic10.swift)
+                @Code(name: "main.swift", file: basic10.swift) {
+                    @Image(source: create-group, alt: "")
+                }
             }
         }
     }
@@ -161,7 +186,9 @@
                 The change made to the group later won't be updated automatically.
                 You'll have to update again to show it on the screen.
                 
-                @Code(name: "main.swift", file: basic11.swift, previousFile: basic10.swift)
+                @Code(name: "main.swift", file: basic11.swift, previousFile: basic10.swift) {
+                    @Image(source: display-group.png, alt: "")
+                }
             }
             
         }

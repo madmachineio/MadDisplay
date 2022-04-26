@@ -2,6 +2,15 @@
 ///
 /// The upper left vertex decides its position. The width and height decide its
 /// size. A rectangle is also a tile and needed to be added to a group for display.
+///
+/// Here is an example:
+/// ```swift
+/// let rect = Rect(x: 0, y: 0, width: 50, height: 50, fill: Color.white, outline: Color.red)
+///
+/// // Add the rectangle to a group for display.
+/// let group = Group()
+/// group.append(rect)
+/// ```
 public final class Rect: Tile {
     /// Create a rectangle.
     ///

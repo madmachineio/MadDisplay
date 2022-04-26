@@ -1,5 +1,16 @@
-/// Create circles. A circle is also a tile and needed to be added to a group
-/// for display.
+/// Create circles.
+///
+/// It is derived from ``MadDisplay/RoundRect``. Its height and width happen to
+/// be twice the radius. The x and y coordinates decide the center of the circle.
+/// The radius decides its size. A circle is also a tile and needed to be added
+/// to a group for display. For example:
+/// ```swift
+/// let circle = Circle(x: 20, y: 20, radius: 10, fill: Color.lime)
+///
+/// // Add the circle to a group for display.
+/// let group = Group()
+/// group.append(circle)
+/// ```
 public final class Circle: RoundRect {
     /// Create a circle.
     ///

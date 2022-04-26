@@ -1,5 +1,15 @@
-/// Create triangles. A triangle is also a kind of polygon, but it has 3 vertex.
-/// It is also a tile and needed to be added to a group for display.
+/// Create triangles.
+///
+/// A triangle is also a kind of ``MadDisplay/Polygon``, but has only 3 vertex.
+/// It is also a tile and needed to be added to a group for display. For example:
+///
+/// ```swift
+/// let triangle = Triangle(x0: 60, y0: 10, x1: 100, y1: 80, x2: 20, y2: 80, fill: Color.yellow)
+///
+/// // Add the triangle to a main group for display.
+/// let group = Group()
+/// group.append(triangle)
+/// ```
 public final class Triangle: Polygon {
     /// Create a triangle.
     /// - Parameters:

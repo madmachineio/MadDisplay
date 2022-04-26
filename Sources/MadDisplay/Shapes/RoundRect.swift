@@ -1,5 +1,16 @@
-/// Create rounded rectangles. A rounded rectangle consists of 4 lines and 4
-/// quarter circles. It is also a tile and needed to be added to a group for display.
+/// Create rounded rectangles.
+///
+/// A rounded rectangle consists of 4 lines and 4 quarter circles.
+/// It is also a tile and needed to be added to a group for display.
+///
+/// Here's how you create it and add it to a group.
+/// ```swift
+/// let roundRect = RoundRect(x: 0, y: 0, width: 80, height: 80, radius: 5, fill: Color.blue, outline: Color.white)
+///
+/// // Add the rounded rectangle to a group for display.
+/// let group = Group()
+/// group.append(roundRect)
+/// ```
 public class RoundRect: Tile {
     /// Create a rounded rectangle.
     /// - Parameters:

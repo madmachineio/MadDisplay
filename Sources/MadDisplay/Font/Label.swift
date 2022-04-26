@@ -2,13 +2,31 @@
 ///
 /// A label is actually a group that consists of the text and its background.
 /// You could directly display it on the screen. But it’s better to add it
-/// to a main group to manage all elements.
+/// to a main group to manage all elements. For example:
 ///
-/// The font used to display text is bitmap font. This type of font stores all
-/// pixels for each character. There is a default font (``RobotRegular16``).
+///```swift
+/// // Set the content of the label. All other parameters are set to default.
+/// let text = Label(text: "Hello!")
+///
+/// // Add the text to a main group for display.
+/// let group = Group()
+/// group.append(text)
+///```
+///
+/// The font used to display text is **bitmap font**. This type of font stores
+/// all pixels for each character. There is a default font (``RobotRegular16``).
 /// You could find another font ``ASCII8``, and its size is much smaller.
 ///
+/// ```swift
+/// let text1 = Label(text: "Hello!", font: ASCII8)
+/// ```
 /// Besides, you could use ``PCFFont`` to set customized font.
+///
+/// If you want to change the text, you need to update the label with new text.
+/// And don't forget to use ``MadDisplay/MadDisplay/update(_:)`` to update the display, or the text on the screen won't be changed.
+/// ```swift
+/// text.updateText("Hi!")
+/// ```
 public final class Label: Group {
 
     let localGroup: Group

@@ -58,7 +58,7 @@ shapes, texts and image. They are also based on the concepts above.
 
 ## Topics
 
-### Tutorials
+### Learn
 - <doc:Basic>
 
 ### Core

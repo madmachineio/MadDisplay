@@ -1,0 +1,51 @@
+@Tutorial(time: 10) {
+    @Intro(title: "Display text") {
+        In this tutorial, you'll display text on a screen.
+        
+        
+    }
+    
+    @Section(title: "Initialize a display") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/MadDisplay`` instance which will be used to show all graphics 
+            on a screen later.
+            
+        }
+        
+        
+        @Steps {
+            @Step {
+                Import the necessary libraries.
+                
+                SwiftIO is for board input and output configuration. MadBoard is 
+                for pin id. ST7789 is the screen drive. And MadDisplay is used 
+                to draw graphics.
+                
+                @Code(name: "main.swift", file: text01.swift, previousFile: text00.swift)
+            }
+            
+            
+            
+            @Step {
+                Initialize a screen.
+                
+                Take an ST7789 LCD for example. Initailize all pins and use them 
+                to initialize the LCD.
+                > Note: Don't forget to change the pins for the screen according 
+                to your circuit connection.
+                
+                @Code(name: "main.swift", file: text02.swift)
+            }
+
+            @Step {
+                Create a display instance using the screen instance above.
+                
+                @Code(name: "main.swift", file: text03.swift) {
+                    @Image(source: create-display.png, alt: "")
+                }
+            }
+        }
+    }
+    
+
+}
