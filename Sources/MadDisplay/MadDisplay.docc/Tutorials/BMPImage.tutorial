@@ -1,0 +1,100 @@
+@Tutorial(time: 10, projectFiles: sampleImage.zip) {
+    @Intro(title: "Display bmp images") {
+        In this tutorial, you will display bmp images. After download the code 
+        and copy bmp file to the SD card, the screen will show the image.
+        There are two types: indexed images and RGB images. The ways to display 
+        them are a little different. Let's figure it out.
+        
+        @Image(source: bmpBanner, alt: "")
+    }
+    
+    
+    @Section(title: "Initialize a display") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/MadDisplay`` instance which will be used to 
+            show all graphics on a screen later.
+            
+        }
+        
+        @Steps {
+            @Step {
+                Import the necessary libraries.
+                
+                `SwiftIO` allows you to set board input and output. `MadBoard` 
+                stores pin ids. `ST7789` configures the screen. And `MadDisplay` 
+                is used to draw graphics.
+                
+                @Code(name: "main.swift", file: image01.swift, 
+                      previousFile: image00.swift)
+            }
+                        
+            @Step {
+                Initialize a screen.
+                
+                Take the ST7789 LCD for example. Initailize all pins and use them 
+                to initialize the LCD.
+                > Note: Don't forget to change the pins for the screen according 
+                to your circuit connection.
+                
+                @Code(name: "main.swift", file: image02.swift)
+            }
+
+            @Step {
+                Create a display instance using the screen instance above.
+                
+                @Code(name: "main.swift", file: image03.swift) {
+                    @Image(source: create-display.png, alt: "")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Display an indexed bitmap") {
+        @ContentAndMedia {
+            Let's see how to get pixel info from the image and show it on the screen.
+            
+            An indexed image has a palette as a color table. All pixels store
+            color indexes of the palette. So it usually has smaller file size. 
+            For indexed images, the count of colors are 256 at most.
+            
+            
+        }
+        
+        @Steps {
+            @Step {
+                Open the image that stores on the SD card. Change the path according
+                to your image info.
+                
+                @Code(name: "main.swift", file: image04.swift, 
+                      previousFile: image03.swift)
+            }
+            
+            @Step {
+                Get bitmap info from the image.
+                
+                @Code(name: "main.swift", file: image05.swift)
+            }
+            
+            @Step {
+                Get palette from the image.
+                
+                @Code(name: "main.swift", file: image06.swift)
+            }
+            
+            @Step {
+                Create a new tile with the bitmap and palette from the image.
+                So the pixels will get true color values from the palette.
+                
+                @Code(name: "main.swift", file: image07.swift)
+            }
+            
+            @Step {
+                Create a group to store the tile and show the image.
+                
+                @Code(name: "main.swift", file: image08.swift) {
+                    @Image(source: display-bmp.png, alt: "")
+                }
+            }
+        }
+    }
+}

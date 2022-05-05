@@ -49,7 +49,7 @@ let tile = Tile(bitmap: bitmap, palette: palette)
 let group = Group()
 group.append(tile)
 
-display.updata(group)
+display.update(group)
 
 ```
 

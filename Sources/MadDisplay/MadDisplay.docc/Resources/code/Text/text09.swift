@@ -34,6 +34,5 @@ for i in (0...9).reversed() {
 }
 
 while true {
-
     sleep(ms: 1000)
 }

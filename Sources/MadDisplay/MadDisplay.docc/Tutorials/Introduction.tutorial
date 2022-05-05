@@ -2,17 +2,16 @@
     @Intro(title: "MadDisplay") {
         Let's learn how to use MadDisplay to display graphics on a screen.
         
-        @Image(source: <#file#>, alt: "")
     }
     
     @Chapter(name: "Basic usage") {
         Learn the basic usage of the library to draw pixels on a screen.
         
-        @Image(source: <#file#>, alt: "")
         
         @TutorialReference(tutorial: "doc:Basic")
         @TutorialReference(tutorial: "doc:Shapes")
         @TutorialReference(tutorial: "doc:Text")
+        @TutorialReference(tutorial: "doc:BMPImage")
     }
 
 }

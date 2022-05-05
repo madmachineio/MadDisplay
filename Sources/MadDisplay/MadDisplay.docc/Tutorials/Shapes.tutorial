@@ -4,7 +4,7 @@
         you with several shapes. You'll follow the tutorial to create some 
         instances and display them.
         
-        
+        @Image(source: shapeBanner.png, alt: "")
     }
     
     @Section(title: "Initialize a display") {
@@ -18,19 +18,18 @@
             @Step {
                 Import the necessary libraries.
                 
-                SwiftIO is for board input and output configuration. MadBoard is 
-                for pin id. ST7789 is the screen drive. And MadDisplay is used 
-                to draw graphics.
+                `SwiftIO` allows you to set board input and output. `MadBoard` 
+                stores pin ids. `ST7789` configures the screen. And `MadDisplay` 
+                is used to draw graphics.
                 
-                @Code(name: "main.swift", file: shapes01.swift, previousFile: shapes00.swift)
-            }
-            
-            
+                @Code(name: "main.swift", file: shapes01.swift, 
+                      previousFile: shapes00.swift)
+            }            
             
             @Step {
                 Initialize a screen.
                 
-                Take an ST7789 LCD for example. Initailize all pins and use them 
+                Take the ST7789 LCD for example. Initailize all pins and use them 
                 to initialize the LCD.
                 > Note: Don't forget to change the pins for the screen according 
                 to your circuit connection.
@@ -61,7 +60,8 @@
             @Step {
                 Create a group to store the shapes.
                 
-                @Code(name: "main.swift", file: shapes04.swift, previousFile: shapes03.swift) {
+                @Code(name: "main.swift", file: shapes04.swift, 
+                      previousFile: shapes03.swift) {
                     @Image(source: shapes-group-00.png, alt: "")
                 }
             }
@@ -128,7 +128,8 @@
             @Step {
                 Display the group to show the shapes.
                 
-                @Code(name: "main.swift", file: shapes11.swift, previousFile: shapes10.swift) {
+                @Code(name: "main.swift", file: shapes11.swift, 
+                      previousFile: shapes10.swift) {
                     @Image(source: display-shapes.png, alt: "")
                 }
             }

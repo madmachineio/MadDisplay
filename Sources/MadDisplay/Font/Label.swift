@@ -1,7 +1,8 @@
 /// Create labels for text display.
 ///
 /// A label is actually a group that consists of the text and its background.
-/// You could directly display it on the screen. But it’s better to add it
+/// Each character of the text is a tile. The background of a label is also a tile.
+/// You can directly display a label on the screen. But it’s better to add it
 /// to a main group to manage all elements. For example:
 ///
 ///```swift
