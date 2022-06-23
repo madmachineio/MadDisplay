@@ -1,4 +1,29 @@
+/// Create rectangles.
+///
+/// The upper left vertex decides its position. The width and height decide its
+/// size. A rectangle is also a tile and needed to be added to a group for display.
+///
+/// Here is an example:
+/// ```swift
+/// let rect = Rect(x: 0, y: 0, width: 50, height: 50, fill: Color.white, outline: Color.red)
+///
+/// // Add the rectangle to a group for display.
+/// let group = Group()
+/// group.append(rect)
+/// ```
 public final class Rect: Tile {
+    /// Create a rectangle.
+    ///
+    /// Its size is determined only by width and height. The outline takes up
+    /// its internal area and will not influence shape’s overall area.
+    /// - Parameters:
+    ///   - x: the x coordinate of the upper left vertex.
+    ///   - y: the y coordinate of the upper left vertex.
+    ///   - width: the width of the rectangle.
+    ///   - height: the height of the rectangle.
+    ///   - fill: the color used to fill the rectangle, nil by default.
+    ///   - outline: the color of the outline, nil by default.
+    ///   - stroke: the width of the outline, 1 pixel by default.
     public init(x: Int, y: Int, width: Int, height: Int, fill: UInt32! = nil, outline: UInt32! = nil, stroke: Int = 1) {
         let bitmap = Bitmap(width: width, height: height, bitCount: 2)
         let palette = Palette(count: 2)
@@ -33,6 +58,8 @@ public final class Rect: Tile {
         super.init(x: x, y: y, bitmap: bitmap, palette: palette)
     }
 
+    /// Set the color of outline.
+    /// - Parameter color: a UInt32 color value.
     public func setOutline(color: UInt32!) {
         if color != nil {
             palette[1] = color
@@ -43,6 +70,8 @@ public final class Rect: Tile {
         }
     }
 
+    /// Fill the rectangle with a specified color.
+    /// - Parameter color: a UInt32 color value.
     public func fill(color: UInt32!) {
         if color != nil {
             palette[0] = color

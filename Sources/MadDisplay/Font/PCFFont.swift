@@ -1,5 +1,19 @@
 import SwiftIO
 
+/// Customize the font by using PCF file.
+///
+/// Portable Compiled Format (PCF) is a kind of bitmap font format.
+/// Bitmap font specifies how each character is formed with pixels. So it actually
+/// stores a bitmap for each character.
+///
+/// This class allows you to decode the `.pcf` file to get the font info and use it
+/// to show the text. Don't forget to paste the font file into the SD card.
+///
+/// Here is an example using [NotoSansSC-Regular-16](https://github.com/madmachineio/MadDisplay/tree/main/font) PCF font:
+/// ```swift
+/// let font = PCFFont(path: "/SD:/NotoSansSC-Regular-16.pcf")
+/// let label = Label(text: "Hello!", font: font)
+/// ```
 public final class PCFFont: Font {
     struct TocEntry {
         let format: UInt32
@@ -94,6 +108,8 @@ public final class PCFFont: Font {
     public var maxCharAscent: Int = 0
     public var maxCharDescent: Int = 0
 
+    /// Get the font info from the pcf font file stored on SD card.
+    /// - Parameter path: the location that the file stored on the SD card.
     public init(path: String) {
         file = FileDescriptor.open(path)
 

@@ -1,3 +1,17 @@
+/// Create a display to show graphics on a screen.
+///
+/// After you gather all elements in a group, you pass the group to the display
+/// instance to display it on the screen.
+///
+/// ```swift
+/// // let screen = ...
+/// let display = MadDisplay(screen: screen)
+///
+/// let group = Group()
+/// ...
+/// display.update(group)
+///
+/// ```
 public final class MadDisplay {
     let screen: BitmapWritable
     let colorSpace: ColorSpace
@@ -9,6 +23,10 @@ public final class MadDisplay {
     var mask: [UInt32]
     var screenBuffer: [UInt8]
 
+    /// Initialize a display to show all elements on the screen.
+    /// - Parameters:
+    ///   - screen: the screen to display the elements. It follows the protocol BitmapWritable.
+    ///   - colorSpace: the colorspace for the display.
     public init(screen: BitmapWritable, colorSpace: ColorSpace? = nil) {
         self.screen = screen
 
@@ -38,6 +56,10 @@ public final class MadDisplay {
     }
 
 
+    /// Display the specified group on the screen.
+    ///
+    /// This is necessary every time you change the group and want to show it.
+    /// - Parameter group: the group for display.
     public func update(_ group: Group) {
         if group.absoluteTransform == nil {
             group.updateTransform(transform)

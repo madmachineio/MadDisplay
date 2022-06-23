@@ -1,5 +1,22 @@
 import SwiftIO
 
+/// Get pixel info from bitmap images.
+///
+/// Don't forget to copy the bmp file to the SD card. If the image is indexed,
+/// you need to get the bitmap and palette separately from the image.
+/// ```swift
+/// // Open a bmp file on the SD card.
+/// let bmp = BMP(path: "/SD:/indexedImage.bmp")
+///
+/// // Get the bitmap and palette info.
+/// let bitmap = bmp.getBitmap()
+/// let palette = bmp.getPalette()!
+///
+/// let tile = Tile(bitmap: bitmap, palette: palette)
+/// let group = Group()
+/// group.append(tile)
+/// ...
+/// ```
 public struct BMP {
     struct FileHeader {
         var bfSize: Int32 = 0
@@ -34,6 +51,10 @@ public struct BMP {
     var bitsPerPixel: Int = 0
     var compression: Bool  = false
 
+    /// Read the BMP file on the SD card.
+    /// - Parameters:
+    ///   - path: the path of the BMP file on SD card.
+    ///   - transparentColor: the color used as a transparent color, nil by default.
     public init(path: String, transparentColor: UInt32? = nil) {
         var bfType = UInt16(0)
         var fileHeader = FileHeader()
@@ -136,10 +157,14 @@ public struct BMP {
         file.close()
     }
 
+    /// Get bitmap info from the BMP file.
+    /// - Returns: a bitmap that stores all pixel info of the image.
     public func getBitmap() -> Bitmap {
         return bitmap
     }
 
+    /// Get the palette from the file if it is an indexed image.
+    /// - Returns: a palette if the image is indexed; nil if it's not indexed.
     public func getPalette() -> Palette? {
         return palette
     }

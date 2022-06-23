@@ -1,3 +1,14 @@
+/// Create a tile to get all pixels ready for display.
+///
+/// To create a tile, you pass the bitmap and palette to it.
+///
+/// ```swift
+/// // let bitmap = Bitmap(...)
+/// // let palette = Palette(...)
+///
+/// // Create a tile using the predefined bitmap and palette.
+/// let tile = Tile(bitmap: bitmap, palette: palette)
+/// ```
 public class Tile {
 
     struct TileOptions: OptionSet {
@@ -30,6 +41,17 @@ public class Tile {
     var options: TileOptions
     var absoluteTransform: Transform!
 
+    /// Initialize a new tile.
+    ///
+    /// You could set the indexed bitmap and palette to get a tile.
+    /// Its position can be changed with the position of its upper left corner.
+    /// Its coordinates is relative to the group it belongs to.
+    /// - Parameters:
+    ///   - x: the x coordinate of the upper left corner.
+    ///   - y: the y coordinate of the upper left corner.
+    ///   - bitmap: a bitmap that stores the pixel info.
+    ///   - palette: a list of color for the bitmap.
+    ///   - colorConverter: a color format setting.
     public init(x: Int = 0, y: Int = 0, bitmap: Bitmap, palette: Palette? = nil, colorConverter: ColorConverter? = nil) {
         guard palette != nil || colorConverter != nil else {
             fatalError("error: palette and colorConverter could not be both nil")
@@ -182,6 +204,9 @@ public class Tile {
         return y
     }
 
+    /// Set the x coordinate of its upper left corner to change the tile’s
+    /// position horizontally.
+    /// - Parameter x: the x coordinate.
     public func setX(_ x: Int) {
         if self.x == x {
             return
@@ -195,6 +220,9 @@ public class Tile {
         }
     }
 
+    /// Set the y coordinate of its upper left corner to change the tile’s
+    /// position vertically.
+    /// - Parameter y: the y coordinate.
     public func setY(_ y: Int) {
         if self.y == y {
             return
@@ -208,6 +236,10 @@ public class Tile {
         }
     }
 
+    /// Change the coordinate of its upper left corner to change the tile’s position.
+    /// - Parameters:
+    ///   - x: the x coordinate.
+    ///   - y: the y coordinate.
     public func setXY(x: Int, y: Int) {
         if self.x == x && self.y == y {
             return

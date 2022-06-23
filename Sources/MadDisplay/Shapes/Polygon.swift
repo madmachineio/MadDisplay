@@ -1,6 +1,24 @@
+/// Create polygons.
+///
+/// The polygon is formed with several vetices in order. And the last point will automatically be connected to the first point to get a closed shape. It is
+/// also a tile and needed to be added to a group for display.
+///
+/// ```swift
+/// let points = [(100,50), (52,85), (71,140), (129,140), (148,85)]
+/// let pentagon = Polygon(point, outline: Color.red)
+///
+/// // Add the polygon to a grou for display.
+/// let group = Group()
+/// group.append(pentagon)
+/// ```
 public class Polygon: Tile {
+    /// The coordinates of a vertex.
     public typealias Point = (x: Int, y: Int)
 
+    /// Create a polygon.
+    /// - Parameters:
+    ///   - points: an array of the cooridinates of all vertices in order.
+    ///   - outline: the color of the outline.
     public init(_ points: [Point], outline: UInt32? = nil) {
         var xs = [Int]()
         var ys = [Int]()

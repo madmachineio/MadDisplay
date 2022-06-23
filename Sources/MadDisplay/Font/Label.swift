@@ -1,3 +1,33 @@
+/// Create labels for text display.
+///
+/// A label is actually a group that consists of the text and its background.
+/// Each character of the text is a tile. The background of a label is also a tile.
+/// You can directly display a label on the screen. But it’s better to add it
+/// to a main group to manage all elements. For example:
+///
+///```swift
+/// // Set the content of the label. All other parameters are set to default.
+/// let text = Label(text: "Hello!")
+///
+/// // Add the text to a main group for display.
+/// let group = Group()
+/// group.append(text)
+///```
+///
+/// The font used to display text is **bitmap font**. This type of font stores
+/// all pixels for each character. There is a default font (``RobotRegular16``).
+/// You could find another font ``ASCII8``, and its size is much smaller.
+///
+/// ```swift
+/// let text1 = Label(text: "Hello!", font: ASCII8)
+/// ```
+/// Besides, you could use ``PCFFont`` to set customized font.
+///
+/// If you want to change the text, you need to update the label with new text.
+/// And don't forget to use ``MadDisplay/MadDisplay/update(_:)`` to update the display, or the text on the screen won't be changed.
+/// ```swift
+/// text.updateText("Hi!")
+/// ```
 public final class Label: Group {
 
     let localGroup: Group
@@ -27,6 +57,15 @@ public final class Label: Group {
     var boundingBox: (Int, Int, Int, Int) = (0, 0, 0, 0)
 
 
+    /// Create a label by setting the text.
+    /// - Parameters:
+    ///   - x: the x-coordinate of the upper left corner of the label.
+    ///   - y: the y-coordinate of the upper left corner of the label.
+    ///   - scale: an integer to set the size of the label. It is 1 by default
+    ///   so the label keeps its original size.
+    ///   - text: the text to display on the screen.
+    ///   - color: the color of the text in UInt32, white by default.
+    ///   - font: the font of the color. It has a default font ``RobotRegular16``.
     public init(x: Int = 0, y: Int = 0, scale: Int = 1, text: String? = nil, color: UInt32 = Color.white, font: Font = RobotRegular16()) {
         localGroup = Group(scale: scale)
 
@@ -89,6 +128,8 @@ public final class Label: Group {
         return backTile
     }
 
+    /// Set the background color for the label.
+    /// - Parameter newColor: a UInt32 color value.
     public func updateBackgroundColor(_ newColor: UInt32? = nil) {
         if let opaqueColor = newColor {
             backgroundPalette.makeOpaque(0)
@@ -131,6 +172,11 @@ public final class Label: Group {
         }
     }
 
+    /// Change the text.
+    ///
+    /// After you invoke this method, you still need to update the display using
+    /// ``MadDisplay/MadDisplay/update(_:)`` to show the new text.
+    /// - Parameter newText: the new text.
     public func updateText(_ newText: String) {
         var x = 0, y = 0, i = 0
 

@@ -1,0 +1,128 @@
+@Tutorial(time: 10, projectFiles: pcfFont.zip) {
+    @Intro(title: "Display text") {
+        In this tutorial, you'll create labels to show text message on a screen.
+        You can change its content, color, font... Let's get started!
+        
+        @Image(source: textBanner.png, alt: "")
+    }
+    
+    @Section(title: "Initialize a display") {
+        @ContentAndMedia {
+            Create a ``MadDisplay/MadDisplay`` instance which will be used to 
+            show all graphics on a screen later.
+            
+        }
+        
+        @Steps {
+            @Step {
+                Import the necessary libraries.
+                
+                `SwiftIO` allows you to set board input and output. `MadBoard` 
+                stores pin ids. `ST7789` configures the screen. And `MadDisplay` 
+                is used to draw graphics.
+                
+                @Code(name: "main.swift", file: text01.swift, 
+                      previousFile: text00.swift)
+            }
+            
+            @Step {
+                Initialize a screen.
+                
+                Take the ST7789 LCD for example. Initailize all pins and use them 
+                to initialize the LCD.
+                > Note: Don't forget to change the pins for the screen according 
+                to your circuit connection.
+                
+                @Code(name: "main.swift", file: text02.swift)
+            }
+
+            @Step {
+                Create a display instance using the screen instance above.
+                
+                @Code(name: "main.swift", file: text03.swift) {
+                    @Image(source: create-display.png, alt: "")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Create texts") {
+        @ContentAndMedia {
+            A ``MadDisplay/Label`` has several parameters to decide how it looks. 
+            In this section, you'll create different labels and show them on 
+            the screen.
+            
+        }
+        
+        @Steps {
+            @Step {
+                Create a group to collect all labels for display.
+                
+                A `Label` contains characters (and background if it's set). Each
+                character constitutes a tile. So it is a `Group`. You can display 
+                it directly. However, it would be better to create another group 
+                as the main group to store labels, even if there is only one label.
+                
+                @Code(name: "main.swift", file: text04.swift, 
+                      previousFile: text03.swift)
+            }
+            
+            @Step {
+                Create a label using the default font and add it to the group.
+                
+                Creating a new label is quite straightforward, you set its content, 
+                position, color, font... and most of them have default values.
+                
+                @Code(name: "main.swift", file: text05.swift)
+            }
+            
+            @Step {
+                Create a label with a ``MadDisplay/PCFFont``.
+                
+                Open the PCF file on the SD card to get font info. Then pass it
+                as a paramter of the label. And don't forget to copy the PCF file
+                to the SD card.
+                
+                @Code(name: "main.swift", file: text06.swift)
+            }
+
+            @Step {
+                Create a new label and add it to the group. You will change its
+                content later.
+                
+                @Code(name: "main.swift", file: text07.swift)
+            }
+            
+            @Step {
+                Display all texts on the screen.
+                
+                @Code(name: "main.swift", file: text08.swift) {
+                    @Image(source: display-label.png, alt: "")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Change the text") {
+        @ContentAndMedia {
+            Now you'll see how to change a label's content.
+            
+        }
+        
+        @Steps {
+            @Step {
+                Update the third label with new text so it starts counting down.
+                After the label is changed, the group to which it belongs changes 
+                with it. Then update the display using the newest group. 
+                BTW, this statement can be easily forgotten🤣.
+                
+                @Code(name: "main.swift", file: text09.swift, 
+                      previousFile: text08.swift) {
+                    @Image(source: update-label.png, alt: "")
+                }
+            }
+
+        }
+    }
+
+}
